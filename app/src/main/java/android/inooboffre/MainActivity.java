@@ -1,5 +1,6 @@
 package android.inooboffre;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -9,6 +10,8 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.color.DynamicColors;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,14 +25,19 @@ import android.os.StrictMode;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedReader;
@@ -55,35 +63,48 @@ public class MainActivity extends AppCompatActivity {
         Button button = findViewById(R.id.button);
         EditText editText = findViewById(R.id.editTextTextPersonName);
         CheckBox checkBox = findViewById(R.id.checkBox);
-        TextView textView8 = findViewById(R.id.textView8);
+        LinearLayout linearLayout = findViewById(R.id.linklayout);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        LinearLayout linearLayout1 = findViewById(R.id.optionlayout);
+        DynamicColors.applyIfAvailable(this);
+        TextView textView8 = findViewById(R.id.titleText);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getTitle().toString().equals("Link")) {
+                    linearLayout.setVisibility(View.VISIBLE);
+                    linearLayout1.setVisibility(View.GONE);
+                    textView8.setText("iNoobOffre");
+                } else {
+                    linearLayout.setVisibility(View.GONE);
+                    linearLayout1.setVisibility(View.VISIBLE);
+                    textView8.setText("Opzioni");
+                }
+                return true;
+            }
+        });
         textView8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                dialogBuilder.setTitle("Licenza open source");
-                dialogBuilder.setMessage("Questo software utilizza OkHttp, distribuito con licenza Apache 2.0. Vedere le condizioni?");
-                dialogBuilder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://github.com/square/okhttp/blob/master/LICENSE.txt"));
-                        startActivity(intent);
-                    }
-                });
-                dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        // Null
-                    }
-                });
-                AlertDialog alertDialog = dialogBuilder.create();
-                alertDialog.show();
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setTitle("Licenza open source")
+                        .setMessage("Questo software utilizza OkHttp, distribuito con licenza Apache 2.0. Vedere le condizioni?")
+                        .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("https://github.com/square/okhttp/blob/master/LICENSE.txt"));
+                                startActivity(intent);
+                            }
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             }
         });
+        Switch switch2 = findViewById(R.id.switch2);
         SharedPreferences impostazioni = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
         Switch switch3 = findViewById(R.id.switch3);
-        checkBox.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.roboto));
-        switch3.setTypeface(ResourcesCompat.getFont(MainActivity.this, R.font.roboto));
 
         Switch switch1 = findViewById(R.id.switch1);
         if (impostazioni.contains("DownloadFoto")) {
@@ -96,45 +117,48 @@ public class MainActivity extends AppCompatActivity {
                 switch1.setChecked(true);
             }
         }
+        if (impostazioni.contains("FotoShare")) {
+            if (impostazioni.getBoolean("FotoShare", true)) {
+                switch2.setChecked(true);
+            }
+        }
             switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                  @Override
                  public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                      if (switch1.isChecked()) {
                              if (!impostazioni.contains("bitlyConfigurato")) {
-                                 AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
-                                 dialogBuilder.setNeutralButton("Ottieni token", new DialogInterface.OnClickListener() {
-                                     @Override
-                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                                         switch1.setChecked(false);
-                                         intent.setData(Uri.parse("https://app.bitly.com/settings/api/"));
-                                         startActivity(intent);
-                                     }
-                                 });
-                                 dialogBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                     @Override
-                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                         switch1.setChecked(false);
-                                     }
-                                 });
-                                 final EditText editBitlyAPI = new EditText(MainActivity.this);
-                                 editBitlyAPI.setHint("Access Token");
-                                 dialogBuilder.setTitle("Integrazione Bitly");
-                                 dialogBuilder.setMessage("Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell'account, che permette la creazione di nuovi link.");
-                                 dialogBuilder.setView(editBitlyAPI);
-                                 dialogBuilder.setPositiveButton("Salva", new DialogInterface.OnClickListener() {
-                                     @Override
-                                     public void onClick(DialogInterface dialogInterface, int i) {
-                                         SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
-                                         SharedPreferences.Editor editor = appSettings.edit();
-                                         editor.putString("bitlyAPI", editBitlyAPI.getText().toString());
-                                         editor.putBoolean("bitlyConfigurato", true);
-                                         editor.putBoolean("BitlyAsDefault", true);
-                                         editor.apply();
-                                     }
-                                 });
-                                 AlertDialog alertDialog = dialogBuilder.create();
-                                 alertDialog.show();
+                                 new MaterialAlertDialogBuilder(MainActivity.this)
+                                         .setNeutralButton("Ottieni token", new DialogInterface.OnClickListener() {
+                                             @Override
+                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                 switch1.setChecked(false);
+                                                 intent.setData(Uri.parse("https://app.bitly.com/settings/api/"));
+                                                 startActivity(intent);
+                                             }
+                                         })
+                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                             @Override
+                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                 switch1.setChecked(false);
+                                             }
+                                         })
+                                         .setTitle("Integrazione Bitly")
+                                         .setMessage("Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell'account, che permette la creazione di nuovi link.")
+                                         .setPositiveButton("Salva", new DialogInterface.OnClickListener() {
+                                             @Override
+                                             public void onClick(DialogInterface dialogInterface, int i) {
+                                                 SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+                                                 SharedPreferences.Editor editor = appSettings.edit();
+                                                 TextView editBitlyAPI = ((androidx.appcompat.app.AlertDialog) dialogInterface).findViewById(android.R.id.text1);
+                                                 editor.putString("bitlyAPI", editBitlyAPI.getText().toString());
+                                                 editor.putBoolean("bitlyConfigurato", true);
+                                                 editor.putBoolean("BitlyAsDefault", true);
+                                                 editor.apply();
+                                             }
+                                         })
+                                         .setView(R.layout.edit_text)
+                                         .show();
                              }
 
                          }
@@ -224,6 +248,11 @@ public class MainActivity extends AppCompatActivity {
                                     PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("</span>"));
                                     PrezzoConsigliato = PrezzoConsigliato.substring(PrezzoConsigliato.lastIndexOf("<span class=\"a-offscreen\">"));
                                     PrezzoConsigliato = PrezzoConsigliato.replace("<span class=\"a-offscreen\">", "");
+                                }
+                                if (line.contains("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">")) {
+                                    PrezzoConsigliato = line.substring(line.indexOf("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">"));
+                                    PrezzoConsigliato = PrezzoConsigliato.replace("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">", "");
+                                    PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("</span>"));
                                 }
                                 if (line.contains("\",\"priceAmount\":")) {
                                     PrezzoNormale = line.substring(0, line.indexOf("\",\"priceAmount\":"));
@@ -328,6 +357,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+
 
                         } else {
                             runOnUiThread(new Runnable() {
