@@ -55,19 +55,59 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+    String appVersion = "1.2.1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button);
+        DynamicColors.applyToActivitiesIfAvailable(getApplication());
         EditText editText = findViewById(R.id.editTextTextPersonName);
         CheckBox checkBox = findViewById(R.id.checkBox);
         LinearLayout linearLayout = findViewById(R.id.linklayout);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         LinearLayout linearLayout1 = findViewById(R.id.optionlayout);
-        DynamicColors.applyIfAvailable(this);
         TextView textView8 = findViewById(R.id.titleText);
+        Thread thread2 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url2 = new URL("https://raw.githubusercontent.com/Lorenzo-Effe/UpdateVersion/main/2e141d0254e3dd4117b9450c92118ec280f4b935-updatecode");
+                    BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
+
+                    String line2 = "";
+                    while ((line2 = reader2.readLine()) != null) {
+                        line2 = line2.replace(".", "");
+                        appVersion = appVersion.replace(".", "");
+                        if (Integer.parseInt(line2) > Integer.parseInt(appVersion)) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    new MaterialAlertDialogBuilder(MainActivity.this)
+                                            .setTitle("Aggiornamento disponibile")
+                                            .setMessage("È disponibile un aggiornamento dell'app.")
+                                            .setPositiveButton("Aggiorna", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                    intent.setData(Uri.parse("https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp/releases/"));
+                                                    startActivity(intent);
+                                                }
+                                            })
+                                            .setNegativeButton("Ignora", null)
+                                            .show();
+                                }
+                            });
+
+                        }
+                    }
+                    } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+            }
+        });
+        thread2.start();
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
