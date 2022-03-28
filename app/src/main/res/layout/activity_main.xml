@@ -187,17 +187,20 @@
                     android:switchPadding="10sp"
                     android:text="Utilizza Bitly per link"
                     android:textSize="16sp" />
-            </LinearLayout>
 
-            <Switch
-                android:id="@+id/switch2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10sp"
-                android:minHeight="48dp"
-                android:text="Invia foto dopo download, in modo da non doverla riallegare"
-                android:textSize="18sp"
-                android:visibility="gone" />
+                <Switch
+                    android:id="@+id/switch2"
+                    style="@style/Widget.Material3.CompoundButton.Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:fontFamily="@font/worksans"
+                    android:minHeight="48dp"
+                    android:switchMinWidth="60dp"
+                    android:text="Invia la foto del prodotto a Telegram dopo la generazione dello script"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
