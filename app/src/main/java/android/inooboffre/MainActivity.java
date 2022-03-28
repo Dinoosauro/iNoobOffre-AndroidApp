@@ -1,11 +1,18 @@
 package android.inooboffre;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ClipData;
@@ -13,15 +20,21 @@ import android.content.ClipboardManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.color.DynamicColors;
+
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,13 +53,20 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -55,7 +75,9 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "1.2.1";
+    String appVersion = "1.3.0";
+    String CodiceProdottoAmazon = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     }
-                    } catch (Exception exception) {
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
@@ -129,8 +151,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 new MaterialAlertDialogBuilder(MainActivity.this)
                         .setTitle("Licenza open source")
-                        .setMessage("Questo software utilizza OkHttp, distribuito con licenza Apache 2.0. Vedere le condizioni?")
-                        .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+                        .setMessage("Questo software utilizza software open source. Vedere le condizioni?")
+                        .setPositiveButton("OkHttp", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -138,7 +160,16 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         })
-                        .setNegativeButton("No", null)
+                        .setNeutralButton("Gist", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                intent.setData(Uri.parse("https://gist.github.com/asifmujteba/4878d98258ada6d1f1ac91bb4dbcce4b"));
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton("Chiudi", null)
                         .show();
             }
         });
@@ -162,46 +193,46 @@ public class MainActivity extends AppCompatActivity {
                 switch2.setChecked(true);
             }
         }
-            switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                 @Override
-                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                     if (switch1.isChecked()) {
-                             if (!impostazioni.contains("bitlyConfigurato")) {
-                                 new MaterialAlertDialogBuilder(MainActivity.this)
-                                         .setNeutralButton("Ottieni token", new DialogInterface.OnClickListener() {
-                                             @Override
-                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                 switch1.setChecked(false);
-                                                 intent.setData(Uri.parse("https://app.bitly.com/settings/api/"));
-                                                 startActivity(intent);
-                                             }
-                                         })
-                                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                             @Override
-                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                 switch1.setChecked(false);
-                                             }
-                                         })
-                                         .setTitle("Integrazione Bitly")
-                                         .setMessage("Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell'account, che permette la creazione di nuovi link.")
-                                         .setPositiveButton("Salva", new DialogInterface.OnClickListener() {
-                                             @Override
-                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                 SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
-                                                 SharedPreferences.Editor editor = appSettings.edit();
-                                                 TextView editBitlyAPI = ((androidx.appcompat.app.AlertDialog) dialogInterface).findViewById(android.R.id.text1);
-                                                 editor.putString("bitlyAPI", editBitlyAPI.getText().toString());
-                                                 editor.putBoolean("bitlyConfigurato", true);
-                                                 editor.putBoolean("BitlyAsDefault", true);
-                                                 editor.apply();
-                                             }
-                                         })
-                                         .setView(R.layout.edit_text)
-                                         .show();
-                             }
+        switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (switch1.isChecked()) {
+                    if (!impostazioni.contains("bitlyConfigurato")) {
+                        new MaterialAlertDialogBuilder(MainActivity.this)
+                                .setNeutralButton("Ottieni token", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        switch1.setChecked(false);
+                                        intent.setData(Uri.parse("https://app.bitly.com/settings/api/"));
+                                        startActivity(intent);
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        switch1.setChecked(false);
+                                    }
+                                })
+                                .setTitle("Integrazione Bitly")
+                                .setMessage("Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell'account, che permette la creazione di nuovi link.")
+                                .setPositiveButton("Salva", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+                                        SharedPreferences.Editor editor = appSettings.edit();
+                                        TextView editBitlyAPI = ((androidx.appcompat.app.AlertDialog) dialogInterface).findViewById(android.R.id.text1);
+                                        editor.putString("bitlyAPI", editBitlyAPI.getText().toString());
+                                        editor.putBoolean("bitlyConfigurato", true);
+                                        editor.putBoolean("BitlyAsDefault", true);
+                                        editor.apply();
+                                    }
+                                })
+                                .setView(R.layout.edit_text)
+                                .show();
+                    }
 
-                         }
+                }
 
             }
         });
@@ -216,12 +247,25 @@ public class MainActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = appSettings.edit();
                     editor.putBoolean("DownloadFoto", true);
                     editor.apply();
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    startActivityForResult(intent, 300);
                 } else {
                     SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
                     SharedPreferences.Editor editor = appSettings.edit();
                     editor.putBoolean("DownloadFoto", false);
                     editor.apply();
                 }
+            }
+        });
+        switch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+                SharedPreferences.Editor editor = appSettings.edit();
+                editor.putBoolean("FotoShare", switch2.isChecked());
+                editor.apply();
             }
         });
         button.setOnClickListener(new View.OnClickListener() {
@@ -262,12 +306,12 @@ public class MainActivity extends AppCompatActivity {
                                         InterruptThis = 1;
                                     }
                                 }
-                                    if (line.contains("<meta name=\"title\" content=\"")) {
-                                        TitoloProdotto = line.substring(line.indexOf("<meta name=\"title\" content=\""));
-                                        TitoloProdotto = TitoloProdotto.replace("<meta name=\"title\" content=\"", "");
-                                        TitoloProdotto = Html.fromHtml(TitoloProdotto).toString();
-                                        TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.lastIndexOf(": Amazon.it"));
-                                    }
+                                if (line.contains("<meta name=\"title\" content=\"")) {
+                                    TitoloProdotto = line.substring(line.indexOf("<meta name=\"title\" content=\""));
+                                    TitoloProdotto = TitoloProdotto.replace("<meta name=\"title\" content=\"", "");
+                                    TitoloProdotto = Html.fromHtml(TitoloProdotto).toString();
+                                    TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.lastIndexOf(": Amazon.it"));
+                                }
                                 if (line.contains("data-a-color=\"base\"><span class=\"a-offscreen\">")) {
                                     if (FirsThing == 0) {
                                         FirsThing = 1;
@@ -306,7 +350,6 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             // L'eccezione sarà gestita in un futuro update
                         }
-                        String CodiceProdottoAmazon = "";
                         if (linkProdotto.contains("/dp/")) {
                             CodiceProdottoAmazon = linkProdotto.substring(linkProdotto.indexOf("/dp/"));
                             CodiceProdottoAmazon = CodiceProdottoAmazon.replace("/dp/", "");
@@ -321,19 +364,19 @@ public class MainActivity extends AppCompatActivity {
                         if (switch1.isChecked()) {
                             try {
                                 OkHttpClient client = new OkHttpClient();
-                            MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-                            String JsonRequest = "{ \"long_url\": \"" + promoCodeApplied + "\" }";
-                            RequestBody formBody = RequestBody.create(JSON, JsonRequest);
-                            SharedPreferences preferences = MainActivity.this.getSharedPreferences("iNoobOffre", Context.MODE_PRIVATE);
-                            String ApiToken = preferences.getString("bitlyAPI", null);
-                            String AuthorizationGet = "Bearer " + ApiToken;
-                            Request request = new Request.Builder()
-                                    .url("https://api-ssl.bitly.com/v4/shorten")
-                                    .addHeader("Content-Type", "application/json; utf-8")
-                                    .addHeader("Accept", "application/json")
-                                    .addHeader("Authorization", AuthorizationGet)
-                                    .post(formBody)
-                                    .build();
+                                MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                                String JsonRequest = "{ \"long_url\": \"" + promoCodeApplied + "\" }";
+                                RequestBody formBody = RequestBody.create(JSON, JsonRequest);
+                                SharedPreferences preferences = MainActivity.this.getSharedPreferences("iNoobOffre", Context.MODE_PRIVATE);
+                                String ApiToken = preferences.getString("bitlyAPI", null);
+                                String AuthorizationGet = "Bearer " + ApiToken;
+                                Request request = new Request.Builder()
+                                        .url("https://api-ssl.bitly.com/v4/shorten")
+                                        .addHeader("Content-Type", "application/json; utf-8")
+                                        .addHeader("Accept", "application/json")
+                                        .addHeader("Authorization", AuthorizationGet)
+                                        .post(formBody)
+                                        .build();
                                 Response response = client.newCall(request).execute();
                                 String getResponse = response.body().string();
                                 String ShortenedAmazonLink = getResponse.substring(getResponse.indexOf("\"link\":\""));
@@ -356,6 +399,8 @@ public class MainActivity extends AppCompatActivity {
                                 });
                             }
                         }
+                        File cacheSaveFile = new File(getApplicationContext().getExternalCacheDir().getPath(), "/iNoobOffre/Cache/" + CodiceProdottoAmazon + ".jpg");
+                        File cacheSaveFile1 = new File(getApplicationContext().getExternalCacheDir().getPath() + "/iNoobOffre/Cache/");
                         // Preparo testo da copiare
                         String ParteASoli = "";
 
@@ -382,8 +427,35 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         if (switch3.isChecked()) {
-                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "/iNoobOffre/" + CodiceProdottoAmazon + ".jpg");
-                            downloadmanager.enqueue(request);
+                            try {
+                                int count;
+                                URL url = new URL(LinkImmagineAmazon);
+                                URLConnection connection = url.openConnection();
+                                connection.connect();
+                                InputStream input = new BufferedInputStream(url.openStream(),
+                                        8192);
+                                Log.d("ciao", impostazioni.getString("SaveDirectory", null));
+                                File saveFile = new File(impostazioni.getString("SaveDirectory", null));
+                                saveFile.mkdirs();
+                                File saveFile1 = new File(impostazioni.getString("SaveDirectory", null) + "/" + CodiceProdottoAmazon + ".jpg");
+                                saveFile1.createNewFile();
+                                FileOutputStream output = new FileOutputStream(saveFile1, false);
+
+                                byte data[] = new byte[1024];
+
+                                long total = 0;
+
+                                while ((count = input.read(data)) != -1) {
+                                    total += count;
+                                    output.write(data, 0, count);
+                                }
+                                output.flush();
+                                output.close();
+                                input.close();
+
+                            } catch (Exception e) {
+                                Log.e("Error: ", e.getMessage());
+                            }
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -409,7 +481,8 @@ public class MainActivity extends AppCompatActivity {
                                         Snackbar.make(view, "Testo copiato negli appunti", 3000).show();
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
-                                    }                                }
+                                    }
+                                }
                             });
 
                         }
@@ -422,6 +495,44 @@ public class MainActivity extends AppCompatActivity {
                                 checkBox.setFocusable(true);
                             }
                         });
+                        if (switch2.isChecked()) {
+                            try {
+                                int count;
+                                URL url = new URL(LinkImmagineAmazon);
+                                URLConnection connection = url.openConnection();
+                                connection.connect();
+                                InputStream input = new BufferedInputStream(url.openStream(),
+                                        8192);
+                                cacheSaveFile1.mkdirs();
+                                cacheSaveFile.createNewFile();
+                                FileOutputStream output = new FileOutputStream(new File(cacheSaveFile.getAbsolutePath().toString()), false);
+
+                                byte data[] = new byte[1024];
+
+                                long total = 0;
+
+                                while ((count = input.read(data)) != -1) {
+                                    total += count;
+                                    output.write(data, 0, count);
+                                }
+                                output.flush();
+                                output.close();
+                                input.close();
+
+                            } catch (Exception e) {
+                                // Log.e("Error: ", e.getMessage());
+                            }
+
+                            Intent sharingIntent = new Intent(Intent.ACTION_VIEW);
+                            sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            sharingIntent.setAction(Intent.ACTION_SEND);
+                            sharingIntent.setType("image/jpeg");
+                            Uri uri2 = FileProvider.getUriForFile(MainActivity.this, BuildConfig.APPLICATION_ID + ".provider",cacheSaveFile);
+                            sharingIntent.putExtra(Intent.EXTRA_STREAM, uri2);
+                            startActivity(Intent.createChooser(sharingIntent, "Condividi con Telegram"));
+
+                        }
+
 
                     }
                 });
@@ -430,4 +541,148 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-}
+
+    public static String getPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = true;
+
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
+
+                return getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
+
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
+    public static String getDataColumn(Context context, Uri uri, String selection,
+                                       String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    public static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    public static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    public static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is Google Photos.
+     */
+    public static boolean isGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
+    }
+
+    @SuppressLint("WrongConstant")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 300) {
+            final int takeFlags = data.getFlags()
+                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
+            SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+            SharedPreferences.Editor editor = appSettings.edit();
+            editor.putString("SaveDirectory", getPath(MainActivity.this, DocumentsContract.buildDocumentUriUsingTree(data.getData(), DocumentsContract.getTreeDocumentId(data.getData()))));
+            Log.d("Save", data.getData().getPath());
+            editor.apply();
+        }
+
+    }
+
+
+
+    }
