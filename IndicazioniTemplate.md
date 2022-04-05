@@ -14,4 +14,5 @@ L'applicazione permette di creare uno script differente per gli articoli non sco
 `$PrezzoNormale($PrezzoNormale _continua template esclusivo per gli articoli scontati..._)_continua template generale_
 `
 
+Nota: non è permesso l'utilizzo di parentesi tonde ()
 Non sono presenti altre limitazioni. 
