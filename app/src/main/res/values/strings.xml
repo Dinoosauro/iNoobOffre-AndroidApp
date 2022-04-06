@@ -1,4 +1,38 @@
 <resources>
     <string name="app_name">iNoobOffre</string>
     <string name="page_title">iNoobOffre</string>
+    <string name="startinstruction">Paste a link from Amazon</string>
+    <string name="hintAmazonLink">Amazon Link</string>
+    <string name="NotDiscounted">This product isn\'t discounted</string>
+    <string name="GetText">Get text</string>
+    <string name="ClipboardInfo">The text will be copied into system\'s clipboard, so it can be copied easily.</string>
+    <string name="DownloadProductPhoto">Download the product\'s photo into a folder in external storage</string>
+    <string name="BitlyLink">Use Bitly for generating links</string>
+    <string name="SendToTelegram">Send the picture to Telegram after copying the text into Clipboard</string>
+    <string name="ChangeTemplate">Change template</string>
+    <string name="Link" translatable="false">Link</string>
+    <string name="Settings">Settings</string>
+    <string name="Yes">Yes</string>
+    <string name="No" translatable="false">No</string>
+    <string name="CreateTemplate">Create your template</string>
+    <string name="Help">Help</string>
+    <string name="TemplateDescription">Personalize the text to paste on Telegram</string>
+    <string name="Save">Save</string>
+    <string name="Update">Update available</string>
+    <string name="UpdateDescription">A new update of iNoobOffre is available</string>
+    <string name="UpdatePositive">Update</string>
+    <string name="Ignore">Ignore</string>
+    <string name="OpenSourceLicense">Open source license</string>
+    <string name="OpenSourceDescription">This software uses some open source libraries. Do you want to see the license?</string>
+    <string name="ObtainToken">Obtain token</string>
+    <string name="BitlyIntegration">Bitly integration</string>
+    <string name="BitlyDescription">Create shortened links with Bitly. It\'s necessary to obtain an account token, that will permit to create new links.</string>
+    <string name="AmazonConnection">Connecting to Amazon. This may take a while...</string>
+    <string name="BitlyPositive">Connection to Bitly API established successfully</string>
+    <string name="BitlyNegative">An error occurred while connecting to Bitly</string>
+    <string name="ProductPicture">Product picture</string>
+    <string name="DownloadingPhoto">Downloading...</string>
+    <string name="ExitCase1">Photo downloaded. Text copied into clipboard</string>
+    <string name="ExitCase2">Text copied into clipboard.</string>
+    <string name="ShareWithTelegram">Share with Telegram</string>
 </resources>
