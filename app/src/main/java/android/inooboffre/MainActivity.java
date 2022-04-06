@@ -64,6 +64,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -75,7 +76,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "1.4.0";
+    String appVersion = "1.4.1";
     String CodiceProdottoAmazon = "";
 
 
@@ -88,6 +89,28 @@ public class MainActivity extends AppCompatActivity {
         EditText editText = findViewById(R.id.editTextTextPersonName);
         CheckBox checkBox = findViewById(R.id.checkBox);
         LinearLayout linearLayout = findViewById(R.id.linklayout);
+        Button button2 = findViewById(R.id.button2);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new MaterialAlertDialogBuilder(MainActivity.this)
+                        .setNegativeButton(R.string.Cancel, null)
+                        .setTitle(R.string.ChangeReferralTitle)
+                        .setMessage(R.string.ChangeReferralDescription)
+                        .setPositiveButton(R.string.Save, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+                                SharedPreferences.Editor editor = appSettings.edit();
+                                TextView templateGet = ((androidx.appcompat.app.AlertDialog) dialogInterface).findViewById(android.R.id.text2);
+                                editor.putString("ReferralLink", templateGet.getText().toString());
+                                editor.apply();
+                            }
+                        })
+                        .setView(R.layout.edit_text2)
+                        .show();
+            }
+        });
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         LinearLayout linearLayout1 = findViewById(R.id.optionlayout);
         TextView textView8 = findViewById(R.id.titleText);
@@ -220,6 +243,11 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n👀 A Soli **$PrezzoNormale($PrezzoNormale** invece di **$PrezzoConsigliato)**\n➡️$Link⬅️\n\n");
             editor.apply();
         }
+        if (!impostazioni.contains("ReferralLink")) {
+            SharedPreferences.Editor editor = impostazioni.edit();
+            editor.putString("ReferralLink", "inoob02-21");
+            editor.apply();
+        }
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -317,27 +345,37 @@ public class MainActivity extends AppCompatActivity {
                         try {
                             // Ottiene HTML della pagina
                             URL url = new URL(editText.getText().toString());
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setReadTimeout(10000);//this is in milliseconds
+                            conn.setConnectTimeout(15000);//this is in milliseconds
+                            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0");
+                            conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+                            conn.connect();
+                            int response = conn.getResponseCode();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
                             int FirsThing = 0;
-                            int InterruptThis = 0;
+                            int SkipThis = 0;
                             while ((line = reader.readLine()) != null) {
                                 // Scraping della pagina Amazon Mobile
-                                if (InterruptThis == 0) {
-                                    if (line.contains("<div alt=\"\" class=\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\" data-a-image-source=\"https://m.media-amazon.com/images/I/")) {
-                                        LinkImmagineAmazon = line.substring(line.indexOf("<div alt=\"\" class=\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\" data-a-image-source=\"https://m.media-amazon.com/images/I/"));
-                                        LinkImmagineAmazon = LinkImmagineAmazon.replace("<div alt=\"\" class=\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\" data-a-image-source=\"https://m.media-amazon.com/images/I/", "");
-                                        LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\" data-a-hires=\""));
-                                        LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("."));
-                                        LinkImmagineAmazon = "https://m.media-amazon.com/images/I/" + LinkImmagineAmazon + "._AC_SY780_.jpg";
-                                        InterruptThis = 1;
+                                    if (line.contains("data-a-dynamic-image=\"{&quot;")) {
+                                        if (SkipThis == 0) {
+                                            LinkImmagineAmazon = line.substring(line.indexOf("data-a-dynamic-image=\"{&quot;"));
+                                            LinkImmagineAmazon = LinkImmagineAmazon.replace("data-a-dynamic-image=\"{&quot;", "");
+                                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("&quot;"));
+                                             if (LinkImmagineAmazon.contains("_AC_")) {
+                                                 LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.lastIndexOf("."));
+                                                 LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.length() - 1);
+                                                 LinkImmagineAmazon = LinkImmagineAmazon + ".jpg";
+                                            }
+                                            SkipThis = 1;
+                                        }
                                     }
-                                }
-                                if (line.contains("<meta name=\"title\" content=\"")) {
-                                    TitoloProdotto = line.substring(line.indexOf("<meta name=\"title\" content=\""));
-                                    TitoloProdotto = TitoloProdotto.replace("<meta name=\"title\" content=\"", "");
-                                    TitoloProdotto = Html.fromHtml(TitoloProdotto).toString();
-                                    TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.lastIndexOf(": Amazon.it"));
+                                if (line.contains("<span id=\"productTitle\" class=\"a-size-large product-title-word-break\">        ")) {
+                                    TitoloProdotto = line.substring(line.indexOf("<span id=\"productTitle\" class=\"a-size-large product-title-word-break\">        "));
+                                    TitoloProdotto = TitoloProdotto.replace("<span id=\"productTitle\" class=\"a-size-large product-title-word-break\">        ", "");
+                                    // TitoloProdotto = Html.fromHtml(TitoloProdotto).toString();
+                                    TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.indexOf("</span>"));
                                 }
                                 if (line.contains("data-a-color=\"base\"><span class=\"a-offscreen\">")) {
                                     if (FirsThing == 0) {
@@ -347,6 +385,11 @@ public class MainActivity extends AppCompatActivity {
                                         PrezzoScontato = PrezzoScontato.replace("data-a-color=\"base\"><span class=\"a-offscreen\">", "");
                                         PrezzoScontato = PrezzoScontato.substring(0, PrezzoScontato.indexOf("</span>"));
                                     }
+                                }
+                                if (line.contains("<span class=\"a-price a-text-price a-size-base\" data-a-size=\"b\" data-a-strike=\"true\" data-a-color=\"secondary\"><span class=\"a-offscreen\">")) {
+                                    PrezzoConsigliato = line.substring(line.indexOf("<span class=\"a-price a-text-price a-size-base\" data-a-size=\"b\" data-a-strike=\"true\" data-a-color=\"secondary\"><span class=\"a-offscreen\">"));
+                                    PrezzoConsigliato = PrezzoConsigliato.replace("<span class=\"a-price a-text-price a-size-base\" data-a-size=\"b\" data-a-strike=\"true\" data-a-color=\"secondary\"><span class=\"a-offscreen\">", "");
+                                    PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("</span>"));
                                 }
                                 if (line.contains("<span class=\"a-size-small a-color-secondary aok-align-center basisPrice\">Prezzo consigliato: <span class=\"a-price a-text-price\" data-a-size=\"s\" data-a-strike=\"true\" data-a-color=\"secondary\"><span class=\"a-offscreen\">")) {
                                     PrezzoConsigliato = line.substring(line.indexOf("<span class=\"a-size-small a-color-secondary aok-align-center basisPrice\">Prezzo consigliato: <span class=\"a-price a-text-price\" data-a-size=\"s\" data-a-strike=\"true\" data-a-color=\"secondary\"><span class=\"a-offscreen\">"));
@@ -386,7 +429,10 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                         CodiceProdottoAmazon = CodiceProdottoAmazon.substring(0, 10);
-                        String promoCodeApplied = "https://www.amazon.it/dp/" + CodiceProdottoAmazon + "/?tag=inoob02-21";
+                        String getAmazonDomain = editText.getText().toString().substring(editText.getText().toString().indexOf("amazon"));
+                        getAmazonDomain = getAmazonDomain.replace("amazon.", "");
+                        getAmazonDomain = getAmazonDomain.substring(0, getAmazonDomain.indexOf("/"));
+                        String promoCodeApplied = "https://www.amazon." + getAmazonDomain + "/dp/" + CodiceProdottoAmazon + "/?tag=" + impostazioni.getString("ReferralLink", null);
                         // Chiamata alle API Bitly
                         if (switch1.isChecked()) {
                             try {
@@ -449,10 +495,15 @@ public class MainActivity extends AppCompatActivity {
                         // Configurazione iniziale per il download dell'immagine
                         DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                         Uri uri = Uri.parse(LinkImmagineAmazon);
-                        DownloadManager.Request request = new DownloadManager.Request(uri);
-                        request.setTitle(String.valueOf(R.string.ProductPicture));
-                        request.setDescription(String.valueOf(R.string.DownloadingPhoto));
-                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                        Log.d("ciao", LinkImmagineAmazon);
+                        try {
+                            DownloadManager.Request request = new DownloadManager.Request(uri);
+                            request.setTitle(String.valueOf(R.string.ProductPicture));
+                            request.setDescription(String.valueOf(R.string.DownloadingPhoto));
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                        } catch (Exception ex) {
+                            // handling in the future
+                        }
                         // Copio negli appunti
                         runOnUiThread(new Runnable() {
                             @Override
