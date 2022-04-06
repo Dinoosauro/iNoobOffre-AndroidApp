@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"
-        android:hint="Template">
+        android:hint="@string/Edit">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@android:id/text2"
