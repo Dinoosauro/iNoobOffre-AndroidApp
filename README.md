@@ -1,2 +1,2 @@
 # iNoobOffre-AndroidApp
-Genera una descrizione incollabile su Telegram partendo da un link Amazon, aggiungendo anche il referral link.
+Create a pastable description to an Amazon product, while downloading a picture of it. Only amazon.it and amazon.com are currently supported.
