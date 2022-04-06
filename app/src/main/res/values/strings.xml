@@ -35,4 +35,11 @@
     <string name="ExitCase1">Photo downloaded. Text copied into clipboard</string>
     <string name="ExitCase2">Text copied into clipboard.</string>
     <string name="ShareWithTelegram">Share with Telegram</string>
+    <string name="ChangeReferral">Change referral link</string>
+    <string name="Cancel">Cancel</string>
+    <string name="ChangeReferralTitle">Change referral link</string>
+    <string name="ChangeReferralDescription">Write your referral code in the textbox</string>
+    <string name="ReferralCode">Referral code</string>
+    <string name="AccessToken" translatable="false">Access Token</string>
+    <string name="Edit">Edit</string>
 </resources>
