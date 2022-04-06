@@ -1,3 +1,4 @@
+This page is in Italian. If you need a version written in English, click [here](https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp/blob/main/TemplateIndications.md).
 # Modifica template di testo
 Puoi personalizzare come vuoi il testo generato dall'app. Per farlo, utilizza il pulsante dedicato dalle impostazioni. 
 ## Codici utili
