@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iNoobOffre</string>
+    <string name="page_title">iNoobOffre</string>
+    <string name="startinstruction">Inserire il link Amazon:</string>
+    <string name="hintAmazonLink">Link Amazon</string>
+    <string name="NotDiscounted">L\'articolo non è in sconto</string>
+    <string name="GetText">Ottieni testo</string>
+    <string name="ClipboardInfo">Il testo verrà copiato negli appunti, in modo da poter essere incollato faclimente.</string>
+    <string name="DownloadProductPhoto">Scarica la foto del prodotto nell\'archivio del telefono</string>
+    <string name="BitlyLink">Utilizza Bitly per generare link</string>
+    <string name="SendToTelegram">Invia la foto a Telegram dopo aver copiato il testo negli appunti</string>
+    <string name="ChangeTemplate">Cambia template</string>
+    <string name="Settings">Opzioni</string>
+    <string name="Yes">Sì</string>
+    <string name="CreateTemplate">Crea il tuo template</string>
+    <string name="Help">Aiuto</string>
+    <string name="TemplateDescription">Personalizza l\'output da incollare su Telegram.</string>
+    <string name="Save">Salva</string>
+    <string name="Update">Aggiornamento disponibile</string>
+    <string name="UpdateDescription">È disponibile un aggiornamento dell\'app</string>
+    <string name="UpdatePositive">Aggiorna</string>
+    <string name="Ignore">Ignora</string>
+    <string name="OpenSourceLicense">Licenze open source</string>
+    <string name="OpenSourceDescription">Questo software utilizza delle librerie open source. Vedere la licenza?</string>
+    <string name="ObtainToken">Ottieni token</string>
+    <string name="BitlyIntegration">Integrazione Bitly</string>
+    <string name="BitlyDescription">Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell\'account, che permette la creazione di nuovi link.</string>
+    <string name="AmazonConnection">Connessione ad Amazon. Questa operazione potrebbe richiedere del tempo...</string>
+    <string name="BitlyPositive">Connessione alle API Bitly riuscita con successo.</string>
+    <string name="BitlyNegative">Errore nella connessione a Bitly</string>
+    <string name="ProductPicture">Foto prodotto</string>
+    <string name="DownloadingPhoto">Download in corso...</string>
+    <string name="ExitCase1">Foto scaricata. Testo copiato negli appunti</string>
+    <string name="ExitCase2">Copied text into clipboard</string>
+    <string name="ShareWithTelegram">Condividi con Telegram</string>
+    <string name="ChangeReferral">"Cambia link di affiliazione "</string>
+    <string name="Cancel">Annulla</string>
+    <string name="ChangeReferralTitle">Cambia link di affiliazione</string>
+    <string name="ChangeReferralDescription">Scrivi il tuo codice di affiliazione nella casella di testo</string>
+    <string name="ReferralCode">Codice di affiliazione</string>
+    <string name="Edit">Modifica</string>
+</resources>
