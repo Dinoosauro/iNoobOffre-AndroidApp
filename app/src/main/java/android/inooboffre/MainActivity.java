@@ -55,6 +55,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -64,10 +65,13 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -76,7 +80,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "1.4.1";
+    String appVersion = "1.4.2";
     String CodiceProdottoAmazon = "";
 
 
@@ -240,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!impostazioni.contains("TemplateText")) {
             SharedPreferences.Editor editor = impostazioni.edit();
-            editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n👀 A Soli **$PrezzoNormale($PrezzoNormale** invece di **$PrezzoConsigliato)**\n➡️$Link⬅️\n\n");
+            editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n👀 A Soli **$PrezzoNormale($PrezzoNormale** invece di **$PrezzoConsigliato)**\n➡   $Link   ️️⬅️\n\n");
             editor.apply();
         }
         if (!impostazioni.contains("ReferralLink")) {
@@ -342,21 +346,52 @@ public class MainActivity extends AppCompatActivity {
                         String PrezzoScontato = "";
                         String PrezzoConsigliato = "";
                         String PrezzoNormale = "";
+                        String totalLine = "";
                         try {
                             // Ottiene HTML della pagina
                             URL url = new URL(editText.getText().toString());
+                            CookieManager cookieManager = new CookieManager();
+                            CookieHandler.setDefault(cookieManager);
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                             conn.setReadTimeout(10000);//this is in milliseconds
                             conn.setConnectTimeout(15000);//this is in milliseconds
+                            conn.setRequestProperty("Cookie", "PHPSESSID=str_from_server");
                             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:66.0) Gecko/20100101 Firefox/66.0");
                             conn.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
                             conn.connect();
                             int response = conn.getResponseCode();
                             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
                             int FirsThing = 0;
                             int SkipThis = 0;
                             while ((line = reader.readLine()) != null) {
+                                Switch switch4 = findViewById(R.id.switch4);
+                                if (switch4.isChecked()) {
+                                         File newFileSave = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre/" + "debugpage.txt");
+                                           File newFileSave2 = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre");
+                                          try {
+                                              newFileSave2.mkdirs();
+                                               newFileSave.createNewFile();
+                                                int count;
+                                                 InputStream input = new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8));
+                                                 FileOutputStream out = new FileOutputStream(newFileSave, true);
+                                                 byte data[] = new byte[1024];
+
+                                                    long total = 0;
+
+                                                  while ((count = input.read(data)) != -1) {
+                                                      total += count;
+                                                      out.write(data, 0, count);
+                                                   }
+                                                   out.flush();
+                                                   out.close();
+                                                  input.close();
+
+                                               } catch (FileNotFoundException e) {
+                                                   e.printStackTrace();
+                                               } catch (IOException e) {
+                                                    e.printStackTrace();
+                                               }
+                                }
                                 // Scraping della pagina Amazon Mobile
                                     if (line.contains("data-a-dynamic-image=\"{&quot;")) {
                                         if (SkipThis == 0) {
@@ -420,6 +455,7 @@ public class MainActivity extends AppCompatActivity {
                         } catch (IOException e) {
                             // L'eccezione sarà gestita in un futuro update
                         }
+
                         if (linkProdotto.contains("/dp/")) {
                             CodiceProdottoAmazon = linkProdotto.substring(linkProdotto.indexOf("/dp/"));
                             CodiceProdottoAmazon = CodiceProdottoAmazon.replace("/dp/", "");
@@ -428,6 +464,8 @@ public class MainActivity extends AppCompatActivity {
                             CodiceProdottoAmazon = CodiceProdottoAmazon.replace("gp/aw/d/", "");
 
                         }
+
+
                         CodiceProdottoAmazon = CodiceProdottoAmazon.substring(0, 10);
                         String getAmazonDomain = editText.getText().toString().substring(editText.getText().toString().indexOf("amazon"));
                         getAmazonDomain = getAmazonDomain.replace("amazon.", "");
@@ -477,7 +515,6 @@ public class MainActivity extends AppCompatActivity {
                         // Preparo testo da copiare
                         String ParteASoli = "";
                         String ottieniTemplate = impostazioni.getString("TemplateText", null);
-                        Log.d("ciao", ottieniTemplate);
                         ottieniTemplate = ottieniTemplate.replace("$NomeProdotto", TitoloProdotto);
 
                         if (checkBox.isChecked()) {
@@ -495,7 +532,6 @@ public class MainActivity extends AppCompatActivity {
                         // Configurazione iniziale per il download dell'immagine
                         DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
                         Uri uri = Uri.parse(LinkImmagineAmazon);
-                        Log.d("ciao", LinkImmagineAmazon);
                         try {
                             DownloadManager.Request request = new DownloadManager.Request(uri);
                             request.setTitle(String.valueOf(R.string.ProductPicture));
@@ -521,7 +557,6 @@ public class MainActivity extends AppCompatActivity {
                                 connection.connect();
                                 InputStream input = new BufferedInputStream(url.openStream(),
                                         8192);
-                                Log.d("ciao", impostazioni.getString("SaveDirectory", null));
                                 File saveFile = new File(impostazioni.getString("SaveDirectory", null));
                                 saveFile.mkdirs();
                                 File saveFile1 = new File(impostazioni.getString("SaveDirectory", null) + "/" + CodiceProdottoAmazon + ".jpg");
