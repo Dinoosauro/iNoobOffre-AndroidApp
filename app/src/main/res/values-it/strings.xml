@@ -40,4 +40,5 @@
     <string name="ChangeReferralDescription">Scrivi il tuo codice di affiliazione nella casella di testo</string>
     <string name="ReferralCode">Codice di affiliazione</string>
     <string name="Edit">Modifica</string>
+    <string name="SaveDebugPage">Salva la pagina Amazon sulla memoria interna (per debug)</string>
 </resources>

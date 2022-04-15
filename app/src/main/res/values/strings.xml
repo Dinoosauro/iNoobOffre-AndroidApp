@@ -42,4 +42,5 @@
     <string name="ReferralCode">Referral code</string>
     <string name="AccessToken" translatable="false">Access Token</string>
     <string name="Edit">Edit</string>
+    <string name="SaveDebugPage">Save the webpage on local drive, for debug purposes</string>
 </resources>
