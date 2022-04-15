@@ -203,6 +203,19 @@
                     android:textSize="16sp"
                     android:visibility="visible" />
 
+                <Switch
+                    android:id="@+id/switch4"
+                    style="@style/Widget.Material3.CompoundButton.Switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10sp"
+                    android:fontFamily="@font/worksans"
+                    android:minHeight="48dp"
+                    android:switchMinWidth="60dp"
+                    android:text="@string/SaveDebugPage"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
                 <Button
                     android:id="@+id/button3"
                     android:layout_width="match_parent"
