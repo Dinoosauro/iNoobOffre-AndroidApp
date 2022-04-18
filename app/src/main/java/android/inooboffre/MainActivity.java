@@ -86,7 +86,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.0.2";
+    String appVersion = "2.0.3";
     String CodiceProdottoAmazon = "";
 
 
@@ -102,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
         Button button2 = findViewById(R.id.button2);
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
         TextView textView11 = findViewById(R.id.textView11);
+        Switch switch5 = findViewById(R.id.switch5);
+        TextView textView18 = findViewById(R.id.textView18);
+        textView18.setText("Version: " + appVersion + " | Open source license");
+
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -189,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-        textView8.setOnClickListener(new View.OnClickListener() {
+        textView18.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new MaterialAlertDialogBuilder(MainActivity.this)
@@ -225,6 +229,11 @@ public class MainActivity extends AppCompatActivity {
         if (impostazioni.contains("FotoShare")) {
             if (impostazioni.getBoolean("FotoShare", true)) {
                 switch2.setChecked(true);
+            }
+        }
+        if (impostazioni.contains("OldDownloadPicker")) {
+            if (impostazioni.getBoolean("OldDownloadPicker", true)) {
+                switch5.setChecked(true);
             }
         }
         if (!impostazioni.contains("TemplateText")) {
@@ -309,6 +318,15 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
                 SharedPreferences.Editor editor = appSettings.edit();
                 editor.putBoolean("FotoShare", switch2.isChecked());
+                editor.apply();
+            }
+        });
+        switch5.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
+                SharedPreferences.Editor editor = appSettings.edit();
+                editor.putBoolean("OldDownloadPicker", switch2.isChecked());
                 editor.apply();
             }
         });
@@ -594,7 +612,11 @@ public class MainActivity extends AppCompatActivity {
                             DownloadManager.Request request = new DownloadManager.Request(uri);
                             request.setTitle(String.valueOf(R.string.ProductPicture));
                             request.setDescription(String.valueOf(R.string.DownloadingPhoto));
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "iNoobOffre_SavedPhotos/" + CodiceProdottoAmazon + ".jpg");
+                            if (switch5.isChecked()) {
+                                downloadmanager.enqueue(request);
+                            }
                         } catch (Exception ex) {
                             // handling in the future
                         }
@@ -607,6 +629,7 @@ public class MainActivity extends AppCompatActivity {
                                 clipboard.setPrimaryClip(testoDaCopiare);
                             }
                         });
+
                         if (switch3.isChecked()) {
                             try {
                                 int count;
