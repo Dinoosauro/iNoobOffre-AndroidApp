@@ -6,7 +6,7 @@
     <string name="NotDiscounted">This product isn\'t discounted</string>
     <string name="GetText">Get text</string>
     <string name="ClipboardInfo">The text will be copied into system\'s clipboard, so it can be copied easily.</string>
-    <string name="DownloadProductPhoto">Download the product\'s photo into a folder in external storage</string>
+    <string name="DownloadProductPhoto">Download the product\'s photo into a selectable folder in external storage</string>
     <string name="BitlyLink">Use Bitly for generating links</string>
     <string name="SendToTelegram">Send the picture to Telegram after copying the text into Clipboard</string>
     <string name="ChangeTemplate">Change template</string>
@@ -61,4 +61,9 @@
     <string name="RestoreScript">Restore default script</string>
     <string name="UnsavableScript">Cannot save this script</string>
     <string name="NotSupportedCharacters">The following symbols aren\'t supported: ↺ ↻</string>
+    <string name="Photo">Photo</string>
+    <string name="OldProductDownload">Download the product\'s photo into the Download folder</string>
+    <string name="Experimental">Experimental</string>
+    <string name="Output" translatable="false">Output</string>
+    <string name="About">About</string>
 </resources>
