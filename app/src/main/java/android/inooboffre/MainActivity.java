@@ -86,7 +86,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.0.0";
+    String appVersion = "2.0.1";
     String CodiceProdottoAmazon = "";
 
 
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (!impostazioni.contains("TemplateText")) {
             SharedPreferences.Editor editor = impostazioni.edit();
-            editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n↻👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**↻↺👀 A Soli**$PrezzoNormale**↺ \n➡   $Link   ️️⬅️\n\n");
+            editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n↻👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**↻↺👀 A Soli**$PrezzoNormale**↺ \n➡️   $Link   ️️⬅️\n\n");
             editor.apply();
         }
         if (!impostazioni.contains("ReferralLink")) {
@@ -575,12 +575,9 @@ public class MainActivity extends AppCompatActivity {
                                 ottieniTemplate = ottieniTemplate.replace("✬", "");
                                 ottieniTemplate = ottieniTemplate.replace("$AmazonChoice", AmazonChoice);
                             } else {
-                                String testoDaTogliere = ottieniTemplate.substring(ottieniTemplate.indexOf("✬") + 1);
-                                testoDaTogliere = testoDaTogliere.substring(0, testoDaTogliere.indexOf("✬"));
-                                testoDaTogliere = "✬" + testoDaTogliere + "✬";
-                                ottieniTemplate = ottieniTemplate.replace(testoDaTogliere, "");
+                                // null
                             }
-                        } else {
+                        } else if (ottieniTemplate.contains("✬")){
                             String testoDaTogliere = ottieniTemplate.substring(ottieniTemplate.indexOf("✬") + 1);
                             testoDaTogliere = testoDaTogliere.substring(0, testoDaTogliere.indexOf("✬"));
                             testoDaTogliere = "✬" + testoDaTogliere + "✬";

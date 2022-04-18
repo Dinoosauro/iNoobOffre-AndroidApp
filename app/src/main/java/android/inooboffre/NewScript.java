@@ -58,11 +58,11 @@ public class NewScript extends AppCompatActivity {
                 .setAction(R.string.RestoreScript, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n↻👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**↻↺👀 A Soli**$PrezzoNormale**↺ \n➡   $Link   ️️⬅️\n\n");
+                        editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n↻👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**↻↺👀 A Soli**$PrezzoNormale**↺ \n➡️   $Link   ️️⬅️\n\n");
                         editor.putString("firstEdit", "⭐ **$NomeProdotto**\n\n");
                         editor.putString("secondEdit", "👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**");
                         editor.putString("thirdEdit", "👀 A Soli**$PrezzoNormale**");
-                        editor.putString("fourthEdit"," \n➡   $Link   ️️⬅️\n\n");
+                        editor.putString("fourthEdit"," \n➡️   $Link   ️️⬅️\n\n");
                         editor.putBoolean("resetJustHappened", true);
                         editor.apply();
                         finish();
