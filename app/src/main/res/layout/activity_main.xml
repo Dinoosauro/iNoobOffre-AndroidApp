@@ -19,9 +19,11 @@
 
 
     <LinearLayout
+        android:id="@+id/generalLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -34,7 +36,7 @@
                 android:fitsSystemWindows="true">
 
                 <com.google.android.material.appbar.CollapsingToolbarLayout
-                    android:id="@+id/getThisColor"
+                    android:id="@+id/getThisColor2"
                     style="?attr/collapsingToolbarLayoutLargeStyle"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
@@ -67,177 +69,188 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:id="@+id/linearLayout1"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:id="@+id/linklayout"
+                android:id="@+id/linearLayout1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView4"
+                <LinearLayout
+                    android:id="@+id/linklayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:text="Link:"
-                    android:textSize="24sp"
-                    android:visibility="gone" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/worksans"
-                    android:padding="10sp"
-                    android:text="@string/startinstruction"
-                    android:textSize="16sp" />
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/outlinedTextField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:hint="Link Amazon">
-
-                    <EditText
-                        android:id="@+id/editTextTextPersonName"
-                        style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
+                    <TextView
+                        android:id="@+id/textView4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:focusedByDefault="false"
+                        android:layout_margin="10sp"
+                        android:text="Link:"
+                        android:textSize="24sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/worksans"
-                        android:hint="@string/hintAmazonLink"
-                        android:inputType="textPersonName"
-                        android:minHeight="48dp"
+                        android:padding="10sp"
+                        android:text="@string/startinstruction"
                         android:textSize="16sp" />
 
-                </com.google.android.material.textfield.TextInputLayout>
 
-                <CheckBox
-                    android:id="@+id/checkBox"
-                    style="@style/Widget.Material3.CompoundButton.CheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:text="@string/NotDiscounted"
-                    android:textSize="16sp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/outlinedTextField"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:hint="Link Amazon">
 
-                <Button
-                    android:id="@+id/button"
+                        <EditText
+                            android:id="@+id/editTextTextPersonName"
+                            style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:focusedByDefault="false"
+                            android:fontFamily="@font/worksans"
+                            android:hint="@string/hintAmazonLink"
+                            android:inputType="textPersonName"
+                            android:minHeight="48dp"
+                            android:textSize="16sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        style="@style/Widget.Material3.CompoundButton.CheckBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="@string/NotDiscounted"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="@string/GetText"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        tools:visibility="gone"></TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/optionlayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:text="@string/GetText"
-                    android:textSize="16sp" />
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksansitalic"
+                        android:text="@string/ClipboardInfo"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switch3"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:switchPadding="10sp"
+                        android:text="@string/DownloadProductPhoto"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switch1"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:switchPadding="10sp"
+                        android:text="@string/BitlyLink"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switch2"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:text="@string/SendToTelegram"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <Switch
+                        android:id="@+id/switch4"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:text="@string/SaveDebugPage"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/button3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="@string/ChangeTemplate"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="@string/ChangeReferral"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:text=" ︎ ︎ ︎" />
+
+                </LinearLayout>
+
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/optionlayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="visible">
-
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksansitalic"
-                    android:text="@string/ClipboardInfo"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/switch3"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:minHeight="48dp"
-                    android:switchMinWidth="60dp"
-                    android:switchPadding="10sp"
-                    android:text="@string/DownloadProductPhoto"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/switch1"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10sp"
-                    android:layout_marginRight="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:minHeight="48dp"
-                    android:switchMinWidth="60dp"
-                    android:switchPadding="10sp"
-                    android:text="@string/BitlyLink"
-                    android:textSize="16sp" />
-
-                <Switch
-                    android:id="@+id/switch2"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:minHeight="48dp"
-                    android:switchMinWidth="60dp"
-                    android:text="@string/SendToTelegram"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <Switch
-                    android:id="@+id/switch4"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:minHeight="48dp"
-                    android:switchMinWidth="60dp"
-                    android:text="@string/SaveDebugPage"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
-
-                <Button
-                    android:id="@+id/button3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:text="@string/ChangeTemplate"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/button2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:text="@string/ChangeReferral"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
     </LinearLayout>
 
 

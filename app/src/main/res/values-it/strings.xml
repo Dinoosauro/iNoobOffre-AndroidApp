@@ -26,7 +26,7 @@
     <string name="ObtainToken">Ottieni token</string>
     <string name="BitlyIntegration">Integrazione Bitly</string>
     <string name="BitlyDescription">Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell\'account, che permette la creazione di nuovi link.</string>
-    <string name="AmazonConnection">Connessione ad Amazon. Questa operazione potrebbe richiedere del tempo...</string>
+    <string name="AmazonConnection">Elaborazione della pagina Amazon in corso</string>
     <string name="BitlyPositive">Connessione alle API Bitly riuscita con successo.</string>
     <string name="BitlyNegative">Errore nella connessione a Bitly</string>
     <string name="ProductPicture">Foto prodotto</string>
@@ -41,4 +41,22 @@
     <string name="ReferralCode">Codice di affiliazione</string>
     <string name="Edit">Modifica</string>
     <string name="SaveDebugPage">Salva la pagina Amazon sulla memoria interna (per debug)</string>
+    <string name="AmazonPageLoading">"Pagina web Amazon "</string>
+    <string name="AmazonPageDescription">Se il prodotto è mostrato correttamente, clicca su Continua. Altirmenti, clicca su Annulla e cambia il link (oppure risolvi il captcha)</string>
+    <string name="Continue">Continua</string>
+    <string name="DownloadingWebpageInfo">La pagina web di Amazon sta caricando. Attendere.</string>
+    <string name="CustomTemplate">Template personalizzato</string>
+    <string name="DiscountedText">Testo per articoli scontati</string>
+    <string name="TemplateHint">Puoi ottenere tutte le variabili utilizzabili cliccando il pulsante +, poi ?</string>
+    <string name="NotDiscountedText">Testo per articoli non scontati</string>
+    <string name="Introduction">Introduzione</string>
+    <string name="End">Parte finale</string>
+    <string name="EndText">Parte finale</string>
+    <string name="IntroductionText">Testo di introduzione</string>
+    <string name="Price">Prezzo</string>
+    <string name="EndShort">Finale</string>
+    <string name="InstructionWeb">Istruzioni aperte nel browser web</string>
+    <string name="RestoreScript">Ripristina script di default</string>
+    <string name="UnsavableScript">Impossibile salvare questo script</string>
+    <string name="NotSupportedCharacters">I caratteri ↺ e ↻ non sono supportati.</string>
 </resources>
