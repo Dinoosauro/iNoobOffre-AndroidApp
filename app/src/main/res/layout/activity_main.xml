@@ -170,6 +170,50 @@
                         android:text="@string/ClipboardInfo"
                         android:textSize="16sp" />
 
+                    <TextView
+                        android:id="@+id/textView12"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksanstitle"
+                        android:text="@string/Photo"
+                        android:textSize="32sp" />
+
+                    <Switch
+                        android:id="@+id/switch5"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:switchPadding="10sp"
+                        android:text="@string/OldProductDownload"
+                        android:textSize="16sp" />
+
+                    <Switch
+                        android:id="@+id/switch2"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:text="@string/SendToTelegram"
+                        android:textSize="16sp"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textView19"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksanstitle"
+                        android:text="@string/Experimental"
+                        android:textSize="24sp" />
+
                     <Switch
                         android:id="@+id/switch3"
                         style="@style/Widget.Material3.CompoundButton.Switch"
@@ -182,6 +226,15 @@
                         android:switchPadding="10sp"
                         android:text="@string/DownloadProductPhoto"
                         android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksanstitle"
+                        android:text="@string/Link"
+                        android:textSize="32sp" />
 
                     <Switch
                         android:id="@+id/switch1"
@@ -198,19 +251,6 @@
                         android:textSize="16sp" />
 
                     <Switch
-                        android:id="@+id/switch2"
-                        style="@style/Widget.Material3.CompoundButton.Switch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10sp"
-                        android:fontFamily="@font/worksans"
-                        android:minHeight="48dp"
-                        android:switchMinWidth="60dp"
-                        android:text="@string/SendToTelegram"
-                        android:textSize="16sp"
-                        android:visibility="visible" />
-
-                    <Switch
                         android:id="@+id/switch4"
                         style="@style/Widget.Material3.CompoundButton.Switch"
                         android:layout_width="match_parent"
@@ -224,6 +264,24 @@
                         android:visibility="visible" />
 
                     <Button
+                        android:id="@+id/button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="@string/ChangeReferral"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksanstitle"
+                        android:text="@string/Output"
+                        android:textSize="32sp" />
+
+                    <Button
                         android:id="@+id/button3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -232,14 +290,34 @@
                         android:text="@string/ChangeTemplate"
                         android:textSize="16sp" />
 
-                    <Button
-                        android:id="@+id/button2"
+                    <TextView
+                        android:id="@+id/textView15"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksanstitle"
+                        android:text="@string/About"
+                        android:textSize="32sp" />
+
+                    <TextView
+                        android:id="@+id/textView17"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10sp"
                         android:fontFamily="@font/worksans"
-                        android:text="@string/ChangeReferral"
-                        android:textSize="16sp" />
+                        android:text="@string/app_name"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10sp"
+                        android:layout_marginRight="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="Version: 2.0.x | Open source license"
+                        android:textSize="10sp"
+                        tools:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textView11"
