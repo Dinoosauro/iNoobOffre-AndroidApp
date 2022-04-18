@@ -7,10 +7,10 @@ android {
 
     defaultConfig {
         applicationId "android.inooboffre"
-        minSdk 21
+        minSdk 23
         targetSdk 32
         versionCode 2
-        versionName "2.0.1"
+        versionName "2.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
