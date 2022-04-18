@@ -86,7 +86,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.0.1";
+    String appVersion = "2.0.2";
     String CodiceProdottoAmazon = "";
 
 
