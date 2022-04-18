@@ -27,7 +27,7 @@
     <string name="ObtainToken">Obtain token</string>
     <string name="BitlyIntegration">Bitly integration</string>
     <string name="BitlyDescription">Create shortened links with Bitly. It\'s necessary to obtain an account token, that will permit to create new links.</string>
-    <string name="AmazonConnection">Elaborazione della pagina Amazon in corso</string>
+    <string name="AmazonConnection">Reading Amazon webpage...</string>
     <string name="BitlyPositive">Connection to Bitly API established successfully</string>
     <string name="BitlyNegative">An error occurred while connecting to Bitly</string>
     <string name="ProductPicture">Product picture</string>
@@ -48,10 +48,6 @@
     <string name="Continue">Continue</string>
     <string name="DownloadingWebpageInfo">Amazon webpage is loading. Please wait.</string>
     <string name="CustomTemplate">Custom template</string>
-    <string name="title_activity_new_script">NewScript</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="DiscountedText">Text for discounted items</string>
     <string name="TemplateHint">You can obtain all the usable variables by clicking the + button, then ?</string>
     <string name="NotDiscountedText">Text for non-discounted items</string>
