@@ -86,7 +86,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.0.3";
+    String appVersion = "2.0.4";
     String CodiceProdottoAmazon = "";
 
 
@@ -770,6 +770,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+                editText.setText(editText.getText().toString().substring(editText.getText().toString().indexOf("http")), TextView.BufferType.EDITABLE);
                 web.loadUrl(editText.getText().toString());
                 new MaterialAlertDialogBuilder(MainActivity.this)
                         .setNegativeButton(R.string.Cancel, null)
