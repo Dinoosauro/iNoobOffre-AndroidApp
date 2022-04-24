@@ -9,7 +9,7 @@
     <string name="ClipboardInfo">Il testo verrà copiato negli appunti, in modo da poter essere incollato faclimente.</string>
     <string name="DownloadProductPhoto">Scarica la foto del prodotto in una cartella selezionabile nell\'archivio del telefono</string>
     <string name="BitlyLink">Utilizza Bitly per generare link</string>
-    <string name="SendToTelegram">Invia la foto a Telegram dopo aver copiato il testo negli appunti</string>
+    <string name="SendToTelegram">Invia la foto ed il testo a Telegram</string>
     <string name="ChangeTemplate">Cambia template</string>
     <string name="Settings">Opzioni</string>
     <string name="Yes">Sì</string>
@@ -21,8 +21,8 @@
     <string name="UpdateDescription">È disponibile un aggiornamento dell\'app</string>
     <string name="UpdatePositive">Aggiorna</string>
     <string name="Ignore">Ignora</string>
-    <string name="OpenSourceLicense">Licenze open source</string>
-    <string name="OpenSourceDescription">Questo software utilizza delle librerie open source. Vedere la licenza?</string>
+    <string name="OpenSourceLicense">Open source</string>
+    <string name="OpenSourceDescription">Vuoi vedere le librerie open source oppure il codice sorgente dell\'app?</string>
     <string name="ObtainToken">Ottieni token</string>
     <string name="BitlyIntegration">Integrazione Bitly</string>
     <string name="BitlyDescription">Genera link accorciati con Bitly. Per generare il link accorciato, è necessario ottenere un token dell\'account, che permette la creazione di nuovi link.</string>
@@ -32,7 +32,7 @@
     <string name="ProductPicture">Foto prodotto</string>
     <string name="DownloadingPhoto">Download in corso...</string>
     <string name="ExitCase1">Foto scaricata. Testo copiato negli appunti</string>
-    <string name="ExitCase2">Copied text into clipboard</string>
+    <string name="ExitCase2">Completato.</string>
     <string name="ShareWithTelegram">Condividi con Telegram</string>
     <string name="ChangeReferral">"Cambia link di affiliazione "</string>
     <string name="Cancel">Annulla</string>
@@ -63,4 +63,9 @@
     <string name="OldProductDownload">Scarica la foto del prodotto nella cartella Download</string>
     <string name="Experimental">Sperimentale</string>
     <string name="About">Informazioni</string>
+    <string name="CopyIntoClipboard">Copia il testo negli appunti</string>
+    <string name="ChangelogIntro">Da ora in poi, vedrai un changelog ogni volta che l\'app verrà aggiornata. Puoi chudere questo popup cliccando da qualsiasi altra parte. Questo è quello attuale:</string>
+    <string name="Libraries">Librerie</string>
+    <string name="SourceCode">Codice sorgente</string>
+    <string name="Close">Chiudi</string>
 </resources>
