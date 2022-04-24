@@ -168,7 +168,8 @@
                         android:layout_margin="10sp"
                         android:fontFamily="@font/worksansitalic"
                         android:text="@string/ClipboardInfo"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/textView12"
@@ -281,6 +282,18 @@
                         android:text="@string/Output"
                         android:textSize="32sp" />
 
+                    <Switch
+                        android:id="@+id/switch6"
+                        style="@style/Widget.Material3.CompoundButton.Switch"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:minHeight="48dp"
+                        android:switchMinWidth="60dp"
+                        android:text="@string/CopyIntoClipboard"
+                        android:textSize="16sp" />
+
                     <Button
                         android:id="@+id/button3"
                         android:layout_width="match_parent"
@@ -312,12 +325,19 @@
                         android:id="@+id/textView18"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10sp"
-                        android:layout_marginRight="10sp"
+                        android:layout_margin="10sp"
                         android:fontFamily="@font/worksans"
-                        android:text="Version: 2.0.x | Open source license"
-                        android:textSize="10sp"
-                        tools:textSize="16sp" />
+                        android:text="This project is open-source and published under the Apache-2.0 License, and it's made possible from awesome open-source libraries. Click to learn more."
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="@font/worksans"
+                        android:text="Version 2.1.0"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/textView11"
