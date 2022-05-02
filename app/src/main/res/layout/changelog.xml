@@ -47,7 +47,8 @@
                 android:layout_margin="10sp"
                 android:fontFamily="@font/worksansitalic"
                 android:text="@string/ChangelogIntro"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/textView22"
@@ -55,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
                 android:fontFamily="@font/worksans"
-                android:text="Lo script viene condiviso automaticamente con Telegram, insieme alla foto. Pertanto, la copia negli appunti dello script è una opzione facoltativa. Puoi anche condividere il link di Amazon da Chrome ad iNoobOffre, senza doverlo copiare ed incollare."
+                android:text="Bug fixes"
                 android:textSize="16sp" />
 
         </LinearLayout>
