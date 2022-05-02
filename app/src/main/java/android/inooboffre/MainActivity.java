@@ -86,7 +86,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.1.0";
+    String appVersion = "2.1.1";
     String CodiceProdottoAmazon = "";
 
 
@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (!impostazioni.contains("FirstTimeIn210")) {
+                                    if (!impostazioni.contains("FirstTimeIn211")) {
                                         SharedPreferences.Editor editor = impostazioni.edit();
-                                        editor.putBoolean("FirstTimeIn210", false);
+                                        editor.putBoolean("FirstTimeIn211", false);
                                         editor.apply();
                                         new MaterialAlertDialogBuilder(MainActivity.this)
                                                 .setView(R.layout.changelog)
@@ -443,6 +443,14 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     // Scraping della pagina Amazon Mobile
+                    if (line.contains("\\\",\\\"hiRes\\\":\\\"")) {
+                        if (SkipThis == 0) {
+                            LinkImmagineAmazon = line.substring(line.indexOf("\\\",\\\"hiRes\\\":\\\""));
+                            LinkImmagineAmazon = LinkImmagineAmazon.replace("\\\",\\\"hiRes\\\":\\\"", "");
+                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\\\""));
+                            SkipThis = 1;
+                        }
+                    }
                     if (line.contains("\\\" data-zoom-hires=\\\"")) {
                         if (SkipThis == 0) {
                             LinkImmagineAmazon = line.substring(line.indexOf("\\\" data-zoom-hires=\\\""));
@@ -560,6 +568,12 @@ public class MainActivity extends AppCompatActivity {
                         AmazonChoice = AmazonChoice.substring(0, AmazonChoice.indexOf("\\u003C/span>"));
                         AmazonChoice = AmazonChoice.replace("\\\"", "\"");
                     }
+                    if (line.contains("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\"")) {
+                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\""));
+                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\"", "");
+                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
+                        PrezzoNormale = PrezzoNormale.replace(">", "");
+                    }
                     if (line.contains("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">")) {
                         NumberOfReviews = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">"));
                         NumberOfReviews = NumberOfReviews.replace("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">", "");
@@ -579,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 Log.d("ciao", CodiceProdottoAmazon);
-
+                Log.d("ciao2", LinkImmagineAmazon);
                 CodiceProdottoAmazon = CodiceProdottoAmazon.substring(0, 10);
                 String getAmazonDomain = lineMore[1].substring(lineMore[1].indexOf("amazon"));
                 getAmazonDomain = getAmazonDomain.replace("amazon.", "");
