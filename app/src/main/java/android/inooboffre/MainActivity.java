@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (!impostazioni.contains("FirstTimeIn211")) {
+                                    if (!impostazioni.contains("FirstTimeIn212")) {
                                         SharedPreferences.Editor editor = impostazioni.edit();
-                                        editor.putBoolean("FirstTimeIn211", false);
+                                        editor.putBoolean("FirstTimeIn212", false);
                                         editor.apply();
                                         new MaterialAlertDialogBuilder(MainActivity.this)
                                                 .setView(R.layout.changelog)
@@ -233,9 +233,19 @@ public class MainActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.Libraries, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse("https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp/blob/main/OpenSourceLicense.md"));
-                                startActivity(intent);
+                                    MaterialAlertDialogBuilder material = new MaterialAlertDialogBuilder(MainActivity.this);
+                                    View view = LayoutInflater.from(MainActivity.this).inflate(R.layout.opensourcewebview, null);
+                                    WebView localWebView = view.findViewById(R.id.getLocalWeb);
+                                localWebView.loadUrl("file:///android_asset/opensource.html");
+                                localWebView.setWebViewClient(new WebViewClient() {
+                                    @Override
+                                    public boolean shouldOverrideUrlLoading(WebView v, String url) {
+                                        v.loadUrl(url);
+                                        return true;
+                                    }
+                                });
+                                material.setView(view);
+                                material.create().show();
                             }
                         })
                         .setNegativeButton(R.string.SourceCode, new DialogInterface.OnClickListener() {
@@ -413,7 +423,6 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // Ottiene HTML della pagina
                     int FirsThing = 0;
-                    int SkipThis = 0;
                     Switch switch4 = findViewById(R.id.switch4);
                     if (switch4.isChecked()) {
                         File newFileSave = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre/" + "debugpage.txt");
@@ -443,26 +452,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     // Scraping della pagina Amazon Mobile
-                    if (line.contains("\\\",\\\"hiRes\\\":\\\"")) {
-                        if (SkipThis == 0) {
-                            LinkImmagineAmazon = line.substring(line.indexOf("\\\",\\\"hiRes\\\":\\\""));
-                            LinkImmagineAmazon = LinkImmagineAmazon.replace("\\\",\\\"hiRes\\\":\\\"", "");
-                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\\\""));
-                            SkipThis = 1;
-                        }
+                    if (line.contains("{\\\"landingImageUrl\\\":\\\"")) {
+                            LinkImmagineAmazon = line.substring(line.indexOf("{\\\"landingImageUrl\\\":\\\""));
+                            LinkImmagineAmazon = LinkImmagineAmazon.replace("{\\\"landingImageUrl\\\":\\\"", "");
+                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\\\"}"));
+                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("._AC_"));
+                            LinkImmagineAmazon = LinkImmagineAmazon + ".jpg";
                     }
-                    if (line.contains("\\\" data-zoom-hires=\\\"")) {
-                        if (SkipThis == 0) {
-                            LinkImmagineAmazon = line.substring(line.indexOf("\\\" data-zoom-hires=\\\""));
-                            LinkImmagineAmazon = LinkImmagineAmazon.replace("\\\" data-zoom-hires=\\\"", "");
-                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\\\""));
-                            if (LinkImmagineAmazon.contains("_AC_")) {
-                                LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.lastIndexOf("."));
-                                LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.length() - 1);
-                                LinkImmagineAmazon = LinkImmagineAmazon + ".jpg";
-                            }
-                            SkipThis = 1;
-                        }
+                    if (line.contains("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
+                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
+                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
+                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
                     }
                     if (line.contains("data-feature-name=\\\"title\\\" data-template-name=\\\"title\\\" class=\\\"a-size-small a-color-secondary a-text-normal\\\">    \\u003Cspan id=\\\"title\\\" class=\\\"a-size-small\\\">")) {
                         TitoloProdotto = line.substring(line.indexOf("data-feature-name=\\\"title\\\" data-template-name=\\\"title\\\" class=\\\"a-size-small a-color-secondary a-text-normal\\\">    \\u003Cspan id=\\\"title\\\" class=\\\"a-size-small\\\">"));
@@ -508,9 +508,9 @@ public class MainActivity extends AppCompatActivity {
                         PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-price a-text-price inlineBlock\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"tertiary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
                         PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
                     }
-                    if (line.contains("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo consigliato: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo consigliato: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo consigliato: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
+                    if (line.contains("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
+                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
+                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
                         PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
                     }
                     if (line.contains("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo in offerta:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
@@ -578,6 +578,27 @@ public class MainActivity extends AppCompatActivity {
                         NumberOfReviews = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">"));
                         NumberOfReviews = NumberOfReviews.replace("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">", "");
                         NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
+                    }
+                    if (line.contains("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
+                        PrezzoConsigliato = line.substring(line.indexOf("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
+                        PrezzoConsigliato = PrezzoConsigliato.replace("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
+                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
+                    }
+                    if (line.contains("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">")) {
+                        NumberOfReviews = line.substring(line.indexOf("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">"));
+                        NumberOfReviews = NumberOfReviews.replace("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">", "");
+                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
+                    }
+                    if (line.contains("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">")) {
+                        StelleProdotto = line.substring(line.indexOf("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">"));
+                        StelleProdotto = StelleProdotto.replace("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">", "");
+                        StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
+                        StelleProdotto = StelleProdotto + " stars";
+                    }
+                    if (line.contains("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> ")) {
+                        NumberOfReviews = line.substring(line.indexOf("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> "));
+                        NumberOfReviews = NumberOfReviews.replace("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> ", "");
+                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf(" \\u003C/span>"));
                     }
 
                 } catch (Exception ex) {
@@ -665,21 +686,24 @@ public class MainActivity extends AppCompatActivity {
                 ottieniTemplate = ottieniTemplate.replace("$Link", promoCodeApplied);
                 ottieniTemplate = ottieniTemplate.replace("\\n", "\n");
                 if (isAmazonChoice) {
-                    if (ottieniTemplate.contains("✬")) {
-                        ottieniTemplate = ottieniTemplate.replace("✬", "");
+                    if (ottieniTemplate.contains("◘")) {
+                        ottieniTemplate = ottieniTemplate.replace("◘", "");
                         ottieniTemplate = ottieniTemplate.replace("$AmazonChoice", AmazonChoice);
                     } else {
                         // null
                     }
-                } else if (ottieniTemplate.contains("✬")) {
-                    String testoDaTogliere = ottieniTemplate.substring(ottieniTemplate.indexOf("✬") + 1);
-                    testoDaTogliere = testoDaTogliere.substring(0, testoDaTogliere.indexOf("✬"));
-                    testoDaTogliere = "✬" + testoDaTogliere + "✬";
+                } else if (ottieniTemplate.contains("◘")) {
+                    String testoDaTogliere = ottieniTemplate.substring(ottieniTemplate.indexOf("◘") + 1);
+                    testoDaTogliere = testoDaTogliere.substring(0, testoDaTogliere.indexOf("◘"));
+                    testoDaTogliere = "◘" + testoDaTogliere + "◘";
                     ottieniTemplate = ottieniTemplate.replace(testoDaTogliere, "");
                 }
                 ottieniTemplate = ottieniTemplate.replace("$StelleProdotto", StelleProdotto);
                 ottieniTemplate = ottieniTemplate.replace("$StelleRappresentazione", StelleRappresentazione);
                 ottieniTemplate = ottieniTemplate.replace("$NumberOfReviews", NumberOfReviews);
+                ottieniTemplate = ottieniTemplate.replace("&nbsp;", " ");
+                ottieniTemplate = ottieniTemplate.replace("\\\"", "\"");
+
                 String TestoClipboard = ottieniTemplate;
                 // Configurazione iniziale per il download dell'immagine
                 DownloadManager downloadmanager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
@@ -760,6 +784,7 @@ public class MainActivity extends AppCompatActivity {
                                 hello.dismiss();
                                 Thread.sleep(3000);
                                 Snackbar.make(view[0], R.string.ExitCase2, 3000).show();
+                                editText.setFocusable(true);
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }

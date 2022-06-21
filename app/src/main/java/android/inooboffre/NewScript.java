@@ -24,9 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.inooboffre.databinding.ActivityNewScriptBinding;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -86,9 +89,19 @@ public class NewScript extends AppCompatActivity {
                     isClickedOnce[0] = true;
                     floatingActionButton1.setVisibility(View.INVISIBLE);
                     floatingActionButton.setImageResource(R.drawable.ic_baseline_add_24);
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse("https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp/blob/main/CustomTemplateVariable.md"));
-                    startActivity(i);
+                    MaterialAlertDialogBuilder material = new MaterialAlertDialogBuilder(NewScript.this);
+                    View view2 = LayoutInflater.from(NewScript.this).inflate(R.layout.opensourcewebview, null);
+                    WebView localWebView = view2.findViewById(R.id.getLocalWeb);
+                    localWebView.loadUrl("file:///android_asset/templateindication.html");
+                    localWebView.setWebViewClient(new WebViewClient() {
+                        @Override
+                        public boolean shouldOverrideUrlLoading(WebView v, String url) {
+                            v.loadUrl(url);
+                            return true;
+                        }
+                    });
+                    material.setView(view2);
+                    material.create().show();
                     snackbar.show();
                 }
             }
