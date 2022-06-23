@@ -68,4 +68,5 @@
     <string name="Libraries">Librerie</string>
     <string name="SourceCode">Codice sorgente</string>
     <string name="Close">Chiudi</string>
+    <string name="ForceRead">Forza lettura</string>
 </resources>

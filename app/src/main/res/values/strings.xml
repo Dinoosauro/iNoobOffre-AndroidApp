@@ -71,4 +71,5 @@
     <string name="Libraries">Libraries</string>
     <string name="SourceCode">Source code</string>
     <string name="Close">Close</string>
+    <string name="ForceRead">Force read</string>
 </resources>
