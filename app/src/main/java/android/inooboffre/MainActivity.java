@@ -419,6 +419,7 @@ public class MainActivity extends AppCompatActivity {
                 String NumberOfReviews = "0";
                 String AmazonChoice = "";
                 boolean ChooseOnlyFirst = true;
+                boolean onlyFirstStar = false;
                 String totalLine = "";
                 try {
                     // Ottiene HTML della pagina
@@ -481,18 +482,6 @@ public class MainActivity extends AppCompatActivity {
                         StelleProdotto = StelleProdotto.substring(StelleProdotto.indexOf("span class=\\\"a-icon-alt\\\">"));
                         StelleProdotto = StelleProdotto.replace("span class=\\\"a-icon-alt\\\">", "");
                         StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
-                        Log.d("ciao", StelleProdotto);
-                        if (StelleProdotto.startsWith("1")) {
-                            StelleRappresentazione = "★☆☆☆☆";
-                        } else if (StelleProdotto.startsWith("2")) {
-                            StelleRappresentazione = "★★☆☆☆";
-                        } else if (StelleProdotto.startsWith("3")) {
-                            StelleRappresentazione = "★★★☆☆";
-                        } else if (StelleProdotto.startsWith("4")) {
-                            StelleRappresentazione = "★★★★☆";
-                        } else if (StelleProdotto.startsWith("5")) {
-                            StelleRappresentazione = "★★★★★";
-                        }
                     }
                     if (line.contains("data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
                         if (FirsThing == 0) {
@@ -600,6 +589,44 @@ public class MainActivity extends AppCompatActivity {
                         NumberOfReviews = NumberOfReviews.replace("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> ", "");
                         NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf(" \\u003C/span>"));
                     }
+                    if (line.contains("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">")) {
+                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">"));
+                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">", "");
+                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
+                    }
+                    if (line.contains("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
+                        PrezzoConsigliato = line.substring(line.indexOf("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
+                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
+                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
+                    }
+                    if (line.contains("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">")) {
+                        NumberOfReviews = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">"));
+                        NumberOfReviews = NumberOfReviews.replace("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">", "");
+                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
+                        NumberOfReviews = NumberOfReviews + " classificações globais";
+                    }
+                    if (line.contains("\\u003Ci class=\\\"a-icon a-icon-star-small a-star-small-")) {
+                        if (!onlyFirstStar) {
+                            if (line.contains("\\u003Cspan class=\\\"a-icon-alt\\\">")) {
+                                StelleProdotto = line.substring(line.indexOf("\\u003Cspan class=\\\"a-icon-alt\\\">"));
+                                StelleProdotto = StelleProdotto.replace("\\u003Cspan class=\\\"a-icon-alt\\\">", "");
+                                StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
+                                onlyFirstStar = true;
+                            }
+                        }
+                    }
+                    if (StelleProdotto.startsWith("1")) {
+                        StelleRappresentazione = "★☆☆☆☆";
+                    } else if (StelleProdotto.startsWith("2")) {
+                        StelleRappresentazione = "★★☆☆☆";
+                    } else if (StelleProdotto.startsWith("3")) {
+                        StelleRappresentazione = "★★★☆☆";
+                    } else if (StelleProdotto.startsWith("4")) {
+                        StelleRappresentazione = "★★★★☆";
+                    } else if (StelleProdotto.startsWith("5")) {
+                        StelleRappresentazione = "★★★★★";
+                    }
+
 
                 } catch (Exception ex) {
                     // null
@@ -855,7 +882,7 @@ public class MainActivity extends AppCompatActivity {
         rootLayout.addView(web);
         // first boolean = page has finished its download
         // second boolean = user has selected the positive button
-        final boolean[] webPageInfo = {false, false};
+        final boolean[] webPageInfo = {false, false, false};
         web.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300));
         web.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
@@ -863,6 +890,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("ciao", lineMore[1]);
                 webPageInfo[0] = true;
                 if (webPageInfo[1]) {
+                    if (!webPageInfo[2])
                     web.evaluateJavascript(
                             "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
                             new ValueCallback<String>() {
@@ -879,6 +907,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        wow[0].setAction(R.string.ForceRead, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        webPageInfo[2] = true;
+                        web.evaluateJavascript(
+                                "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+                                new ValueCallback<String>() {
+                                    @Override
+                                    public void onReceiveValue(String html) {
+                                        lineMore[0] = html;
+                                        try {
+                                            thread.start();
+                                        } catch (Exception ex) {
+                                            // will be handled
+                                        }
+                                    }
+                                });
+
+                    }
+                });
         editText.setText(editText.getText().toString().substring(editText.getText().toString().indexOf("http")), TextView.BufferType.EDITABLE);
         web.loadUrl(editText.getText().toString());
         new MaterialAlertDialogBuilder(MainActivity.this)
@@ -890,15 +938,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         webPageInfo[1] = true;
                         if (webPageInfo[0]) {
-                            web.evaluateJavascript(
-                                    "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
-                                    new ValueCallback<String>() {
-                                        @Override
-                                        public void onReceiveValue(String html) {
-                                            lineMore[0] = html;
-                                            thread.start();
-                                        }
-                                    });
+                            if (!webPageInfo[2]) {
+                                web.evaluateJavascript(
+                                        "(function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();",
+                                        new ValueCallback<String>() {
+                                            @Override
+                                            public void onReceiveValue(String html) {
+                                                lineMore[0] = html;
+                                                thread.start();
+                                            }
+                                        });
+                            }
                         } else {
                             wow[0].show();
                         }
@@ -911,7 +961,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View newview) {
-                editText.setFocusable(false);
+                //editText.setFocusable(false);
                 switch3.setFocusable(false);
                 checkBox.setFocusable(false);
                 wow[0] = Snackbar.make(newview, R.string.DownloadingWebpageInfo, BaseTransientBottomBar.LENGTH_INDEFINITE);
@@ -922,7 +972,7 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if ("text/plain".equals(type)) {
                 editText.setText(intent.getStringExtra(Intent.EXTRA_TEXT), TextView.BufferType.EDITABLE);
-                editText.setFocusable(false);
+                //editText.setFocusable(false);
                 switch3.setFocusable(false);
                 checkBox.setFocusable(false);
                 wow[0] = Snackbar.make(findViewById(R.id.linearLayout1), R.string.DownloadingWebpageInfo, BaseTransientBottomBar.LENGTH_INDEFINITE);
