@@ -21,7 +21,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="200sp"
-                android:background="#5B84F0"
                 android:orientation="vertical">
 
                 <ImageView
@@ -38,7 +37,7 @@
                 android:layout_margin="10sp"
                 android:fontFamily="@font/worksanstitle"
                 android:text="Changelog"
-                android:textSize="32sp" />
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/textView21"
@@ -56,8 +55,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10sp"
                 android:fontFamily="@font/worksans"
-                android:text="Bug fixes and improvements to the user experience. Added official support to many other Amazon websites."
-                android:textSize="16sp" />
+                android:text="&#8226; Tutti i siti Amazon (ad esclusione di Amazon China) sono supportati \n&#8226; Piccoli miglioramenti al design generale \n&#8226; Elimina facilmente il link col pulsante dedicato \n&#8226; L'applicazione è ora più veloce"
+                android:textSize="16sp"/>
 
         </LinearLayout>
     </ScrollView>

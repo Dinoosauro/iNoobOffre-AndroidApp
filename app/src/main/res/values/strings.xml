@@ -72,4 +72,13 @@
     <string name="SourceCode">Source code</string>
     <string name="Close">Close</string>
     <string name="ForceRead">Force read</string>
+    <string name="DeletedInput">Link deleted from the textbox</string>
+    <string name="Undo">Undo</string>
+    <string name="Software">Software</string>
+    <string name="DarkMode">Edit theme settings</string>
+    <string name="SystemSettigns">Device settings</string>
+    <string name="Dark">Dark</string>
+    <string name="Light">Light</string>
+    <string name="DarkTitle">Select application theme</string>
+    <string name="DarkDescription">Select if iNoobOffre should follow device settings for the application theme; or force dark/light mode</string>
 </resources>

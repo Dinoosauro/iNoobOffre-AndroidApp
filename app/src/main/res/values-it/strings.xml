@@ -69,4 +69,13 @@
     <string name="SourceCode">Codice sorgente</string>
     <string name="Close">Chiudi</string>
     <string name="ForceRead">Forza lettura</string>
+    <string name="DeletedInput">Link eliminato dalla casella di testo</string>
+    <string name="Undo">Annulla</string>
+    <string name="Software">Applicazione</string>
+    <string name="DarkMode">Modifica tema applicazione</string>
+    <string name="SystemSettigns">Impostazioni di sistema</string>
+    <string name="Dark">Scuro</string>
+    <string name="Light">Chiaro</string>
+    <string name="DarkTitle">Seleziona tema applicazione</string>
+    <string name="DarkDescription">Seleziona se iNoobOffre dovrebbe seguire le impostazioni del dispositivo per il tema dell\'applicazione, o se forzare il tema scuro/chiaro</string>
 </resources>
