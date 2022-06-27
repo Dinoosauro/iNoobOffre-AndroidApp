@@ -6,6 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.core.content.res.ResourcesCompat;
@@ -18,6 +20,7 @@ import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.color.DynamicColors;
 
@@ -35,7 +38,9 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -55,6 +60,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
@@ -86,7 +92,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.1.2";
+    String appVersion = "2.2.0";
     String CodiceProdottoAmazon = "";
 
 
@@ -102,8 +108,82 @@ public class MainActivity extends AppCompatActivity {
         Button button2 = findViewById(R.id.button2);
         final Snackbar[] wow = new Snackbar[1];
         String[] lineMore = {"", ""};
+        SharedPreferences impostazioni = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
         BottomNavigationView bottomNavigationView = findViewById(R.id.nav_view);
+        Button button4 = findViewById(R.id.button4);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences.Editor editor = impostazioni.edit();
+                MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(MainActivity.this);
+                materialAlertDialogBuilder.setNeutralButton(R.string.SystemSettigns, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        editor.putString("AppTheme", "0");
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        editor.apply();
+                    }
+                });
+                materialAlertDialogBuilder.setPositiveButton(R.string.Dark, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        editor.putString("AppTheme", "1");
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        editor.apply();
+                    }
+                });
+                materialAlertDialogBuilder.setNegativeButton(R.string.Light, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        editor.putString("AppTheme", "2");
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        editor.apply();
+
+                    }
+                });
+                materialAlertDialogBuilder.setTitle(R.string.DarkTitle);
+                materialAlertDialogBuilder.setMessage(R.string.DarkDescription);
+                materialAlertDialogBuilder.show();
+            }
+        });
         TextView textView11 = findViewById(R.id.textView11);
+        FloatingActionButton fab = findViewById(R.id.deleteButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String recoveryText = editText.getText().toString();
+                editText.setText("", TextView.BufferType.EDITABLE);
+                fab.setVisibility(View.INVISIBLE);
+                Snackbar deletedInfo = Snackbar.make(view, R.string.DeletedInput, 3000);
+                deletedInfo.setAction(R.string.Undo, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        editText.setText(recoveryText, TextView.BufferType.EDITABLE);
+                        deletedInfo.dismiss();
+                        }
+                });
+                deletedInfo.show();
+
+            }
+        });
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (!editText.getText().toString().equals("")) {
+                    fab.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         Switch switch5 = findViewById(R.id.switch5);
         TextView textView18 = findViewById(R.id.textView18);
         Switch switch6 = findViewById(R.id.switch6);
@@ -147,7 +227,6 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout linearLayout1 = findViewById(R.id.optionlayout);
         TextView textView8 = findViewById(R.id.titleText);
         Button button3 = findViewById(R.id.button3);
-        SharedPreferences impostazioni = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    URL url2 = new URL("https://raw.githubusercontent.com/Lorenzo-Effe/UpdateVersion/main/2e141d0254e3dd4117b9450c92118ec280f4b935-updatecode");
+                    URL url2 = new URL("https://raw.githubusercontent.com/Dinoosauro/UpdateVersion/main/2e141d0254e3dd4117b9450c92118ec280f4b935-updatecode");
                     BufferedReader reader2 = new BufferedReader(new InputStreamReader(url2.openStream()));
 
                     String line2 = "";
@@ -178,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onClick(DialogInterface dialogInterface, int i) {
                                                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                    intent.setData(Uri.parse("https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp/releases/"));
+                                                    intent.setData(Uri.parse("https://github.com/Dinoosauro/iNoobOffre-AndroidApp/releases/"));
                                                     startActivity(intent);
                                                 }
                                             })
@@ -191,9 +270,9 @@ public class MainActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (!impostazioni.contains("FirstTimeIn212")) {
+                                    if (!impostazioni.contains("FirstTimeIn220")) {
                                         SharedPreferences.Editor editor = impostazioni.edit();
-                                        editor.putBoolean("FirstTimeIn212", false);
+                                        editor.putBoolean("FirstTimeIn220", false);
                                         editor.apply();
                                         new MaterialAlertDialogBuilder(MainActivity.this)
                                                 .setView(R.layout.changelog)
@@ -216,10 +295,15 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout.setVisibility(View.VISIBLE);
                     linearLayout1.setVisibility(View.GONE);
                     textView8.setText(R.string.app_name);
+                    if (!editText.getText().toString().equals("")) {
+                        fab.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     linearLayout.setVisibility(View.GONE);
                     linearLayout1.setVisibility(View.VISIBLE);
                     textView8.setText(R.string.Settings);
+                    fab.setVisibility(View.INVISIBLE);
+
                 }
                 return true;
             }
@@ -252,7 +336,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse("https://github.com/Lorenzo-Effe/iNoobOffre-AndroidApp"));
+                                intent.setData(Uri.parse("https://github.com/Dinoosauro/iNoobOffre-AndroidApp"));
                                 startActivity(intent);
                             }
                         })
@@ -289,6 +373,13 @@ public class MainActivity extends AppCompatActivity {
         if (impostazioni.contains("OldDownloadPicker")) {
             if (impostazioni.getBoolean("OldDownloadPicker", true)) {
                 switch5.setChecked(true);
+            }
+        }
+        if (impostazioni.contains("AppTheme")) {
+            if (impostazioni.getString("AppTheme", null).equals("1")) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else if (impostazioni.getString("AppTheme", null).equals("2")) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             }
         }
         if (!impostazioni.contains("TemplateText")) {
@@ -407,23 +498,19 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Snackbar hello = Snackbar.make(view[0], R.string.AmazonConnection, BaseTransientBottomBar.LENGTH_INDEFINITE);
                 hello.show();
-                String LinkGeneraleAmazon = "";
-                String TitoloProdotto = "";
-                String LinkImmagineAmazon = "";
-                String PrezzoScontato = "";
-                String StelleProdotto = "";
+                // Dichiarazione delle variabili utili all'applicazione ed inizializzazione della classe Web Scraper.
+                AmazonWebScraper amzn = new AmazonWebScraper();
+                String TitoloProdotto = amzn.NomeProdotto(line);
+                String LinkImmagineAmazon = amzn.ImmagineAmazon(line);
+                String StelleProdotto = amzn.StelleDelProdotto(line);
                 String StelleRappresentazione = "☆☆☆☆☆";
-                String PrezzoConsigliato = "";
-                String PrezzoNormale = "";
-                boolean isAmazonChoice = false;
-                String NumberOfReviews = "0";
-                String AmazonChoice = "";
-                boolean ChooseOnlyFirst = true;
+                String PrezzoConsigliato = amzn.PrezzoNonScontato(line);
+                String PrezzoNormale = amzn.PrezzoCorrente(line);
+                boolean isAmazonChoice = amzn.getIfAmazonChoice(line);
+                String NumberOfReviews = amzn.NumeroRecensioni(line);
+                String AmazonChoice = amzn.AmazonChoiceSearch(line);
                 boolean onlyFirstStar = false;
-                String totalLine = "";
-                try {
-                    // Ottiene HTML della pagina
-                    int FirsThing = 0;
+                // Scrive la pagina HTML in un file di testo se l'opzione è attivata.
                     Switch switch4 = findViewById(R.id.switch4);
                     if (switch4.isChecked()) {
                         File newFileSave = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre/" + "debugpage.txt");
@@ -453,168 +540,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     // Scraping della pagina Amazon Mobile
-                    if (line.contains("{\\\"landingImageUrl\\\":\\\"")) {
-                            LinkImmagineAmazon = line.substring(line.indexOf("{\\\"landingImageUrl\\\":\\\""));
-                            LinkImmagineAmazon = LinkImmagineAmazon.replace("{\\\"landingImageUrl\\\":\\\"", "");
-                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("\\\"}"));
-                            LinkImmagineAmazon = LinkImmagineAmazon.substring(0, LinkImmagineAmazon.indexOf("._AC_"));
-                            LinkImmagineAmazon = LinkImmagineAmazon + ".jpg";
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("data-feature-name=\\\"title\\\" data-template-name=\\\"title\\\" class=\\\"a-size-small a-color-secondary a-text-normal\\\">    \\u003Cspan id=\\\"title\\\" class=\\\"a-size-small\\\">")) {
-                        TitoloProdotto = line.substring(line.indexOf("data-feature-name=\\\"title\\\" data-template-name=\\\"title\\\" class=\\\"a-size-small a-color-secondary a-text-normal\\\">    \\u003Cspan id=\\\"title\\\" class=\\\"a-size-small\\\">"));
-                        TitoloProdotto = TitoloProdotto.replace("data-feature-name=\\\"title\\\" data-template-name=\\\"title\\\" class=\\\"a-size-small a-color-secondary a-text-normal\\\">    \\u003Cspan id=\\\"title\\\" class=\\\"a-size-small\\\"> ", "");
-                        // TitoloProdotto = Html.fromHtml(TitoloProdotto).toString();
-                        TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Ch1 id=\\\"title\\\" class=\\\"a-size-medium\\\">")) {
-                        TitoloProdotto = line.substring(line.indexOf("\\u003Ch1 id=\\\"title\\\" class=\\\"a-size-medium\\\">"));
-                        TitoloProdotto = TitoloProdotto.replace("\\u003Ch1 id=\\\"title\\\" class=\\\"a-size-medium\\\">", "");
-                        TitoloProdotto = TitoloProdotto.substring(0, TitoloProdotto.indexOf("\\u003Cspan class="));
-                    }
-                    if (line.contains("\\u003Ci class=\\\"a-icon a-icon-star-mini a-star-mini-4-5\\\">\\u003Cspan class=\\\"a-icon-alt\\\">")) {
-                        StelleProdotto = line.substring(line.indexOf("\\u003Ci class=\\\"a-icon a-icon-star-mini"));
-                        StelleProdotto = StelleProdotto.replace("\\u003Ci class=\\\"a-icon a-icon-star-mini", "");
-                        StelleProdotto = StelleProdotto.substring(StelleProdotto.indexOf("span class=\\\"a-icon-alt\\\">"));
-                        StelleProdotto = StelleProdotto.replace("span class=\\\"a-icon-alt\\\">", "");
-                        StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        if (FirsThing == 0) {
-                            FirsThing = 1;
-                        } else {
-                            PrezzoScontato = line.substring(line.indexOf("data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                            PrezzoScontato = PrezzoScontato.replace("data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                            PrezzoScontato = PrezzoScontato.substring(0, PrezzoScontato.indexOf("\\u003C/span>"));
-                        }
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price a-text-price inlineBlock\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"tertiary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price a-text-price inlineBlock\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"tertiary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-price a-text-price inlineBlock\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"tertiary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo in offerta:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo in offerta:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo in offerta:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo precedente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo precedente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo precedente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo precedente: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo precedente: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan> \\u003Cspan class=\\\"a-size-small a-color-secondary aok-align-center basisPrice\\\">Prezzo precedente: \\u003Cspan class=\\\"a-price a-text-price\\\" data-a-size=\\\"s\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cdiv class=\\\"a-column a-span12\\\">                            \\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo consigliato:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\"")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cdiv class=\\\"a-column a-span12\\\">                            \\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo consigliato:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\""));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cdiv class=\\\"a-column a-span12\\\">                            \\u003Ctable class=\\\"a-normal a-align-top\\\">  \\u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo consigliato:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\"", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace(">", "");
-                    }
-                    if (line.contains("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("<span class=\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("</span>"));
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price pitchPriceCssOverride\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price pitchPriceCssOverride\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price pitchPriceCssOverride\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayMargin priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayMargin priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayMargin priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Saldi:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Saldi:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Saldi:\\u003C/td>\\u003Ctd>       \\u003Cspan class=\\\"a-price a-text-price a-size-medium apexPriceToPay\\\" data-a-size=\\\"b\\\" data-a-color=\\\"price\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("u003Ctbody>\\u003Ctr>\\u003Ctd class=\\\"a-span1 a-color-secondary a-size-base a-text-right a-nowrap\\\">Prezzo:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\"> \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("data-a-sheet=\\\"{&quot;name&quot;:&quot;amazons_choice_bottom_sheet&quot;,&quot;sheetType&quot;:&quot;web&quot;,&quot;preloadDomId&quot;:&quot;amazons_choice_bottom_sheet_content&quot;,&quot;closeType&quot;:&quot;icon&quot;,&quot;height&quot;:&quot;210&quot;}\\\">  \\u003Cspan class=\\\"a-size-small aok-float-left ac-badge-rectangle\\\"> \\u003Cspan class=\\\"ac-badge-text-primary ac-white\\\">")) {
-                        isAmazonChoice = true;
-                        AmazonChoice = line.substring(line.indexOf("data-a-sheet=\\\"{&quot;name&quot;:&quot;amazons_choice_bottom_sheet&quot;,&quot;sheetType&quot;:&quot;web&quot;,&quot;preloadDomId&quot;:&quot;amazons_choice_bottom_sheet_content&quot;,&quot;closeType&quot;:&quot;icon&quot;,&quot;height&quot;:&quot;210&quot;}\\\">  \\u003Cspan class=\\\"a-size-small aok-float-left ac-badge-rectangle\\\"> \\u003Cspan class=\\\"ac-badge-text-primary ac-white\\\">"));
-                        AmazonChoice = AmazonChoice.replace("data-a-sheet=\\\"{&quot;name&quot;:&quot;amazons_choice_bottom_sheet&quot;,&quot;sheetType&quot;:&quot;web&quot;,&quot;preloadDomId&quot;:&quot;amazons_choice_bottom_sheet_content&quot;,&quot;closeType&quot;:&quot;icon&quot;,&quot;height&quot;:&quot;210&quot;}\\\">  \\u003Cspan class=\\\"a-size-small aok-float-left ac-badge-rectangle\\\"> \\u003Cspan class=\\\"ac-badge-text-primary ac-white\\\">", "");
-                        AmazonChoice = AmazonChoice.substring(AmazonChoice.indexOf("\\u003C/span> \\u003Cspan class=\\\"aok-float-left ac-badge-triangle\\\">\\u003C/span>  \\u003Cspan class=\\\"ac-mobile-for-text\\\">\\n\\u003Cspan>"));
-                        AmazonChoice = AmazonChoice.replace("\\u003C/span> \\u003Cspan class=\\\"aok-float-left ac-badge-triangle\\\">\\u003C/span>  \\u003Cspan class=\\\"ac-mobile-for-text\\\">\\n\\u003Cspan>", "");
-                        AmazonChoice = AmazonChoice.substring(0, AmazonChoice.indexOf("\\u003C/span>"));
-                        AmazonChoice = AmazonChoice.replace("\\\"", "\"");
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\"")) {
-                        PrezzoNormale = line.substring(line.indexOf("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\""));
-                        PrezzoNormale = PrezzoNormale.replace("\\u003Cspan class=\\\"a-price aok-align-center reinventPricePriceToPayPadding priceToPay\\\" data-a-size=\\\"xxl\\\" data-a-color=\\\"base\\\">\\u003Cspan class=\\\"a-offscreen\\\"", "");
-                        PrezzoNormale = PrezzoNormale.substring(0, PrezzoNormale.indexOf("\\u003C/span>"));
-                        PrezzoNormale = PrezzoNormale.replace(">", "");
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">")) {
-                        NumberOfReviews = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">"));
-                        NumberOfReviews = NumberOfReviews.replace("\\u003Cspan class=\\\"a-size-mini cm-cr-review-stars-text-sm\\\">", "");
-                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("Precio más bajo reciente:\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">       \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">")) {
-                        NumberOfReviews = line.substring(line.indexOf("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">"));
-                        NumberOfReviews = NumberOfReviews.replace("\\u003Cspan data-hook=\\\"total-rating-count\\\" class=\\\"a-size-base a-color-tertiary totalRatingCount\\\">", "");
-                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">")) {
-                        StelleProdotto = line.substring(line.indexOf("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">"));
-                        StelleProdotto = StelleProdotto.replace("\\u003Cspan data-hook=\\\"average-stars-rating-text\\\" class=\\\"a-size-base a-text-beside-button\\\">", "");
-                        StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
-                        StelleProdotto = StelleProdotto + " stars";
-                    }
-                    if (line.contains("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> ")) {
-                        NumberOfReviews = line.substring(line.indexOf("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> "));
-                        NumberOfReviews = NumberOfReviews.replace("productTitleGroupSprite\\\">\\u003C/span> \\u003Cspan class=\\\"a-size-small a-color-base\\\"> ", "");
-                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf(" \\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003Cspan class=\\\"a-size-medium a-color-base price-strikethrough inline-show-experience margin-spacing aok-hidden notranslate\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">")) {
-                        PrezzoConsigliato = line.substring(line.indexOf("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">"));
-                        PrezzoConsigliato = PrezzoConsigliato.replace("\\u003C/td>\\u003Ctd class=\\\"a-color-secondary a-size-base\\\">      \\u003Cspan class=\\\"a-price a-text-price a-size-base\\\" data-a-size=\\\"b\\\" data-a-strike=\\\"true\\\" data-a-color=\\\"secondary\\\">\\u003Cspan class=\\\"a-offscreen\\\">", "");
-                        PrezzoConsigliato = PrezzoConsigliato.substring(0, PrezzoConsigliato.indexOf("\\u003C/span>"));
-                    }
-                    if (line.contains("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">")) {
-                        NumberOfReviews = line.substring(line.indexOf("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">"));
-                        NumberOfReviews = NumberOfReviews.replace("\\u003Cspan class=\\\"a-size-small cm-cr-review-stars-text-md\\\">", "");
-                        NumberOfReviews = NumberOfReviews.substring(0, NumberOfReviews.indexOf("\\u003C/span>"));
-                        NumberOfReviews = NumberOfReviews + " classificações globais";
-                    }
-                    if (line.contains("\\u003Ci class=\\\"a-icon a-icon-star-small a-star-small-")) {
-                        if (!onlyFirstStar) {
-                            if (line.contains("\\u003Cspan class=\\\"a-icon-alt\\\">")) {
-                                StelleProdotto = line.substring(line.indexOf("\\u003Cspan class=\\\"a-icon-alt\\\">"));
-                                StelleProdotto = StelleProdotto.replace("\\u003Cspan class=\\\"a-icon-alt\\\">", "");
-                                StelleProdotto = StelleProdotto.substring(0, StelleProdotto.indexOf("\\u003C/span>"));
-                                onlyFirstStar = true;
-                            }
-                        }
-                    }
+
+
                     if (StelleProdotto.startsWith("1")) {
                         StelleRappresentazione = "★☆☆☆☆";
                     } else if (StelleProdotto.startsWith("2")) {
@@ -627,11 +554,7 @@ public class MainActivity extends AppCompatActivity {
                         StelleRappresentazione = "★★★★★";
                     }
 
-
-                } catch (Exception ex) {
-                    // null
-                }
-                CodiceProdottoAmazon = linkProdotto;
+                    CodiceProdottoAmazon = linkProdotto;
                 if (linkProdotto.contains("/dp/")) {
                     CodiceProdottoAmazon = linkProdotto.substring(linkProdotto.indexOf("/dp/"));
                     CodiceProdottoAmazon = CodiceProdottoAmazon.replace("/dp/", "");
@@ -640,8 +563,6 @@ public class MainActivity extends AppCompatActivity {
                     CodiceProdottoAmazon = CodiceProdottoAmazon.replace("gp/aw/d/", "");
 
                 }
-                Log.d("ciao", CodiceProdottoAmazon);
-                Log.d("ciao2", LinkImmagineAmazon);
                 CodiceProdottoAmazon = CodiceProdottoAmazon.substring(0, 10);
                 String getAmazonDomain = lineMore[1].substring(lineMore[1].indexOf("amazon"));
                 getAmazonDomain = getAmazonDomain.replace("amazon.", "");
@@ -729,6 +650,21 @@ public class MainActivity extends AppCompatActivity {
                 ottieniTemplate = ottieniTemplate.replace("$StelleRappresentazione", StelleRappresentazione);
                 ottieniTemplate = ottieniTemplate.replace("$NumberOfReviews", NumberOfReviews);
                 ottieniTemplate = ottieniTemplate.replace("&nbsp;", " ");
+                if (ottieniTemplate.contains("$ScontoProdottoPercentuale")) {
+                    if (!PrezzoNormale.equals("")&&!PrezzoConsigliato.equals("")) {
+                        ottieniTemplate = ottieniTemplate.replace("$ScontoProdottoPercentuale", String.valueOf(100-(100 * Double.parseDouble(PrezzoNormale.replace(",", ".").replace("€", "").replace("&nbsp;", "")) / Double.parseDouble(PrezzoConsigliato.replace(",", ".").replace("€", "").replace("&nbsp;", "")))).substring(0, 2) + "%");
+                    } else {
+                        ottieniTemplate = ottieniTemplate.replace("$ScontoProdottoPercentuale", "0%");
+                    }
+                }
+                if (ottieniTemplate.contains("$PercentualeProdottoScontatoSuProdotto")) {
+                    if (!PrezzoNormale.equals("")&&!PrezzoConsigliato.equals("")) {
+                        ottieniTemplate = ottieniTemplate.replace("$PercentualeProdottoScontatoSuProdotto", String.valueOf(100 * Double.parseDouble(PrezzoNormale.replace(",", ".").replace("€", "").replace("&nbsp;", "")) / Double.parseDouble(PrezzoConsigliato.replace(",", ".").replace("€", "").replace("&nbsp;", ""))).substring(0, 2) + "%");
+                    } else {
+                        ottieniTemplate = ottieniTemplate.replace("$PercentualeProdottoScontatoSuProdotto", "0%");
+                    }
+
+                }
                 ottieniTemplate = ottieniTemplate.replace("\\\"", "\"");
 
                 String TestoClipboard = ottieniTemplate;
@@ -920,7 +856,7 @@ public class MainActivity extends AppCompatActivity {
                                         try {
                                             thread.start();
                                         } catch (Exception ex) {
-                                            // will be handled
+                                            ex.printStackTrace();
                                         }
                                     }
                                 });
@@ -984,128 +920,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static String getPath(final Context context, final Uri uri) {
 
-        final boolean isKitKat = true;
-
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-
-                // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
-            // Return the remote address
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is Google Photos.
-     */
-    public static boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
 
     @SuppressLint("WrongConstant")
     @Override
@@ -1118,7 +933,7 @@ public class MainActivity extends AppCompatActivity {
             getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
             SharedPreferences appSettings = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
             SharedPreferences.Editor editor = appSettings.edit();
-            editor.putString("SaveDirectory", getPath(MainActivity.this, DocumentsContract.buildDocumentUriUsingTree(data.getData(), DocumentsContract.getTreeDocumentId(data.getData()))));
+            editor.putString("SaveDirectory", getSelectedPathGist.getPath(MainActivity.this, DocumentsContract.buildDocumentUriUsingTree(data.getData(), DocumentsContract.getTreeDocumentId(data.getData()))));
             Log.d("Save", data.getData().getPath());
             editor.apply();
         }
