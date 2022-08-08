@@ -92,7 +92,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
-    String appVersion = "2.2.0";
+    String appVersion = "2.2.1";
     String CodiceProdottoAmazon = "";
 
 
@@ -498,6 +498,35 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Snackbar hello = Snackbar.make(view[0], R.string.AmazonConnection, BaseTransientBottomBar.LENGTH_INDEFINITE);
                 hello.show();
+                // Scrive la pagina HTML in un file di testo se l'opzione è attivata.
+                Switch switch4 = findViewById(R.id.switch4);
+                if (switch4.isChecked()) {
+                    File newFileSave = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre/" + "debugpage.txt");
+                    File newFileSave2 = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre");
+                    try {
+                        newFileSave2.mkdirs();
+                        newFileSave.createNewFile();
+                        int count;
+                        InputStream input = new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8));
+                        FileOutputStream out = new FileOutputStream(newFileSave, true);
+                        byte data[] = new byte[1024];
+
+                        long total = 0;
+
+                        while ((count = input.read(data)) != -1) {
+                            total += count;
+                            out.write(data, 0, count);
+                        }
+                        out.flush();
+                        out.close();
+                        input.close();
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 // Dichiarazione delle variabili utili all'applicazione ed inizializzazione della classe Web Scraper.
                 AmazonWebScraper amzn = new AmazonWebScraper();
                 String TitoloProdotto = amzn.NomeProdotto(line);
@@ -510,35 +539,7 @@ public class MainActivity extends AppCompatActivity {
                 String NumberOfReviews = amzn.NumeroRecensioni(line);
                 String AmazonChoice = amzn.AmazonChoiceSearch(line);
                 boolean onlyFirstStar = false;
-                // Scrive la pagina HTML in un file di testo se l'opzione è attivata.
-                    Switch switch4 = findViewById(R.id.switch4);
-                    if (switch4.isChecked()) {
-                        File newFileSave = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre/" + "debugpage.txt");
-                        File newFileSave2 = new File(Environment.getExternalStorageDirectory() + "/iNoobOffre");
-                        try {
-                            newFileSave2.mkdirs();
-                            newFileSave.createNewFile();
-                            int count;
-                            InputStream input = new ByteArrayInputStream(line.getBytes(StandardCharsets.UTF_8));
-                            FileOutputStream out = new FileOutputStream(newFileSave, true);
-                            byte data[] = new byte[1024];
 
-                            long total = 0;
-
-                            while ((count = input.read(data)) != -1) {
-                                total += count;
-                                out.write(data, 0, count);
-                            }
-                            out.flush();
-                            out.close();
-                            input.close();
-
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
                     // Scraping della pagina Amazon Mobile
 
 

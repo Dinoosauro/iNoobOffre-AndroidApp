@@ -4,11 +4,20 @@ public class AmazonWebScraper {
     // This is the logic used to obtain all the values that iNoobOffre currently supports.
 
     public String ImmagineAmazon(String line) {
-        String ImmagineAmazon = line.substring(line.indexOf("{\\\"landingImageUrl\\\":\\\""));
-        ImmagineAmazon = ImmagineAmazon.replace("{\\\"landingImageUrl\\\":\\\"", "");
-        ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("\\\"}"));
-        ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("._AC_"));
-        ImmagineAmazon = ImmagineAmazon + ".jpg";
+        String ImmagineAmazon = null;
+        if (line.contains("{\\\"landingImageUrl\\\":\\\"")) {
+            ImmagineAmazon = line.substring(line.indexOf("{\\\"landingImageUrl\\\":\\\""));
+            ImmagineAmazon = ImmagineAmazon.replace("{\\\"landingImageUrl\\\":\\\"", "");
+            ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("\\\"}"));
+            ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("._AC_"));
+            ImmagineAmazon = ImmagineAmazon + ".jpg";
+        } else if (line.contains("class=\\\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\\\" data-a-image-source=\\\"")) {
+            ImmagineAmazon = line.substring((line.indexOf("class=\\\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\\\" data-a-image-source=\\\"")));
+            ImmagineAmazon = ImmagineAmazon.replace("class=\\\"a-image-wrapper a-lazy-loaded a-manually-loaded immersive-carousel-img-manual-load\\\" data-a-image-source=\\\"", "");
+            ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("\" style=\\\"\\\">"));
+            ImmagineAmazon = ImmagineAmazon.substring(0, ImmagineAmazon.indexOf("._AC_"));
+            ImmagineAmazon = ImmagineAmazon + ".jpg";
+        }
         return ImmagineAmazon;
     }
     public String PrezzoCorrente(String line) {
