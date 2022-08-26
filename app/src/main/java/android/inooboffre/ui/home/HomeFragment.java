@@ -3,6 +3,7 @@ package android.inooboffre.ui.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.inooboffre.R;
+import android.inooboffre.SaveDraft;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.inooboffre.databinding.FragmentHomeBinding;
 
+import com.google.android.material.elevation.SurfaceColors;
+
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -28,22 +31,20 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        root.findViewById(R.id.introductionScroll).setBackgroundColor(SurfaceColors.SURFACE_1.getColor(getContext()));
+        root.findViewById(R.id.getThisColor3).setBackgroundColor(SurfaceColors.SURFACE_2.getColor(getContext()));
+
         EditText introduzione = root.findViewById(R.id.introduzione);
         SharedPreferences preferences = getActivity().getSharedPreferences("iNoobOffre", Context.MODE_PRIVATE);
-        if (preferences.contains("firstEdit")) {
-            introduzione.setText(preferences.getString("firstEdit", null), TextView.BufferType.EDITABLE);
-        } else {
-            introduzione.setText("⭐ **$NomeProdotto**\n\n", TextView.BufferType.EDITABLE);
-        }
+        SaveDraft saveDraft = new SaveDraft();
+        // Load the draft or the previously saved value
+        saveDraft.load("firstEdit", preferences, introduzione, "⭐ **$NomeProdotto**\n\n");
         introduzione.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if (!b) {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    if (!preferences.contains("resetJustHappened") || !preferences.getBoolean("resetJustHappened", true)) {
-                        editor.putString("firstEdit", introduzione.getText().toString());
-                        editor.apply();
-                    }
+                    // Save the input as a draft
+                    saveDraft.save("firstEdit", preferences, introduzione);
                 }
             }
         });

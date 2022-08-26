@@ -2,15 +2,13 @@ package android.inooboffre.ui.dashboard;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.inooboffre.NewScript;
 import android.inooboffre.R;
+import android.inooboffre.SaveDraft;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.inooboffre.databinding.FragmentDashboardBinding;
+
+import com.google.android.material.elevation.SurfaceColors;
 
 public class DashboardFragment extends Fragment {
 
@@ -30,42 +30,36 @@ public class DashboardFragment extends Fragment {
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        root.findViewById(R.id.discountScroll).setBackgroundColor(SurfaceColors.SURFACE_1.getColor(getContext()));
+        root.findViewById(R.id.getThisColor3).setBackgroundColor(SurfaceColors.SURFACE_2.getColor(getContext()));
+
+        // Get EditText for discounted items
         EditText introduzione = root.findViewById(R.id.prezzoScontato);
-        SharedPreferences preferences = getActivity().getSharedPreferences("iNoobOffre", Context.MODE_PRIVATE);
-        if (preferences.contains("secondEdit")) {
-            introduzione.setText(preferences.getString("secondEdit", null), TextView.BufferType.EDITABLE);
-        } else {
-            introduzione.setText("👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**", TextView.BufferType.EDITABLE);
-        }
+        SharedPreferences currentPreferences = getActivity().getSharedPreferences("iNoobOffre", Context.MODE_PRIVATE);
+        SaveDraft saveDraft = new SaveDraft();
+        // Load the draft or the previously saved value
+        saveDraft.load("secondEdit", currentPreferences, introduzione, "👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**");
         introduzione.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                SharedPreferences.Editor editor = preferences.edit();
-                if (!preferences.contains("resetJustHappened") || !preferences.getBoolean("resetJustHappened", true)) {
-                    editor.putString("secondEdit", introduzione.getText().toString());
-                    editor.apply();
-                }
+                // Save the input as a draft
+                saveDraft.save("secondEdit", currentPreferences, introduzione);
+
             }
         });
         EditText introduzione2 = root.findViewById(R.id.prezzoNonScontato);
-        if (preferences.contains("thirdEdit")) {
-            introduzione2.setText(preferences.getString("thirdEdit", null), TextView.BufferType.EDITABLE);
-        } else {
-            introduzione2.setText("👀 A Soli**$PrezzoNormale**", TextView.BufferType.EDITABLE);
-
-        }
+        // Load the draft or the previously saved value
+        saveDraft.load("thirdEdit", currentPreferences, introduzione2, "👀 A Soli**$PrezzoNormale**");
         introduzione2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                SharedPreferences.Editor editor = preferences.edit();
-                if (!preferences.contains("resetJustHappened") || !preferences.getBoolean("resetJustHappened", true)) {
-                    editor.putString("thirdEdit", introduzione2.getText().toString());
-                    editor.apply();
-                }
+                // Save the input as a draft
+                saveDraft.save("thirdEdit", currentPreferences, introduzione2);
             }
         });
         return root;
     }
+
 
     @Override
     public void onDestroyView() {

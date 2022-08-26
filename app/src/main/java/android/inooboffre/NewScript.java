@@ -36,7 +36,6 @@ import android.widget.LinearLayout;
 public class NewScript extends AppCompatActivity {
 
     private ActivityNewScriptBinding binding;
-    private int getHeight = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +46,20 @@ public class NewScript extends AppCompatActivity {
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
-        getHeight = navView.getHeight();
         SharedPreferences impostazioni = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
         SharedPreferences.Editor editor = impostazioni.edit();
+        // The user clicked on the button, so no reset happened.
         editor.putBoolean("resetJustHappened", false);
         editor.apply();
+        // Set up a snackbar that restores the default script.
         Snackbar snackbar = Snackbar.make(findViewById(R.id.nav_host_fragment_activity_new_script), R.string.InstructionWeb, 8000)
                 .setAction(R.string.RestoreScript, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // Rewrite every string to the default one.
                         editor.putString("TemplateText", "⭐ **$NomeProdotto**\n\n↻👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**↻↺👀 A Soli**$PrezzoNormale**↺ \n➡️   $Link   ️️⬅️\n\n");
                         editor.putString("firstEdit", "⭐ **$NomeProdotto**\n\n");
                         editor.putString("secondEdit", "👀 A Soli **$PrezzoNormale** invece di **$PrezzoConsigliato**");
@@ -81,14 +80,17 @@ public class NewScript extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isClickedOnce[0]) {
+                    // Button is clicked once, so change the first floating button's icon for help resource and then make visible the save button.
                     isClickedOnce[0] = false;
                     floatingActionButton.setImageResource(R.drawable.ic_baseline_help_24);
                     floatingActionButton1.setVisibility(View.VISIBLE);
 
                 } else {
+                    // Button is clicked twice, so the user asked to see help resource.
                     isClickedOnce[0] = true;
                     floatingActionButton1.setVisibility(View.INVISIBLE);
                     floatingActionButton.setImageResource(R.drawable.ic_baseline_add_24);
+                    // Show an AlertDialog where templeate indications are listed.
                     MaterialAlertDialogBuilder material = new MaterialAlertDialogBuilder(NewScript.this);
                     View view2 = LayoutInflater.from(NewScript.this).inflate(R.layout.opensourcewebview, null);
                     WebView localWebView = view2.findViewById(R.id.getLocalWeb);
@@ -102,6 +104,7 @@ public class NewScript extends AppCompatActivity {
                     });
                     material.setView(view2);
                     material.create().show();
+                    // Show the snackbar that permit to reset the script to the previous one
                     snackbar.show();
                 }
             }
@@ -109,48 +112,18 @@ public class NewScript extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Toglie il focus dall'ultima casella rimasta
-                try {
-                    EditText editText = findViewById(R.id.introduzione);
-                    editText.clearFocus();
-                } catch (Exception ex) {
-                    // that's fine.
-                }
-                try {
-                    EditText editText = findViewById(R.id.prezzoNonScontato);
-                    editText.clearFocus();
-                } catch (Exception ex) {
-                    // that's fine.
-                }
-                try {
-                    EditText editText = findViewById(R.id.prezzoScontato);
-                    editText.clearFocus();
-                } catch (Exception ex) {
-                    // that's fine.
-                }
-                try {
-                    EditText editText = findViewById(R.id.ParteFinale);
-                    editText.clearFocus();
-                } catch (Exception ex) {
-                    // that's fine.
-                }
-                String firstEdit = "";
-                if (impostazioni.contains("firstEdit")) {
-                    firstEdit = impostazioni.getString("firstEdit", null);
-                }
-                String secondEdit = "";
-                if (impostazioni.contains("secondEdit")) {
-                    secondEdit = impostazioni.getString("secondEdit", null);
-                }
-                String thirdEdit = "";
-                if (impostazioni.contains("thirdEdit")) {
-                    thirdEdit = impostazioni.getString("thirdEdit", null);
-                }
-                String fourthEdit = "";
-                if (impostazioni.contains("fourthEdit")) {
-                    fourthEdit = impostazioni.getString("fourthEdit", null);
-                }
+                // Change focus to the various EditTexts
+                clearFocusOf(findViewById(R.id.introduzione));
+                clearFocusOf(findViewById(R.id.prezzoNonScontato));
+                clearFocusOf(findViewById(R.id.prezzoScontato));
+                clearFocusOf(findViewById(R.id.ParteFinale));
+                // Get the template of various parts
+                String firstEdit = getEdits("firstEdit", impostazioni);
+                String secondEdit = getEdits("secondEdit", impostazioni);
+                String thirdEdit = getEdits("thirdEdit", impostazioni);
+                String fourthEdit = getEdits("fourthEdit", impostazioni);
                 floatingActionButton1.setVisibility(View.INVISIBLE);
+                // Create an alert dialog that notifies the user that illegal characters are present.
                 String united = firstEdit + secondEdit + thirdEdit + fourthEdit;
                 MaterialAlertDialogBuilder materialAlertDialogBuilder = new MaterialAlertDialogBuilder(NewScript.this);
                 materialAlertDialogBuilder.setTitle(R.string.UnsavableScript);
@@ -160,9 +133,9 @@ public class NewScript extends AppCompatActivity {
                 } else if (united.contains("↺")) {
                     materialAlertDialogBuilder.show();
                 } else {
+                    // If everything is okay, save the script into a SharedPreference
                     String combineEverything = firstEdit + "\n↻" + secondEdit + "↻\n↺" + thirdEdit + "↺\n" + fourthEdit;
                     combineEverything = combineEverything.replace("\n", "\\n");
-                    SharedPreferences impostazioni = getApplicationContext().getSharedPreferences("iNoobOffre", 0);
                     SharedPreferences.Editor editor = impostazioni.edit();
                     editor.putString("TemplateText", combineEverything);
                     Log.d("ciao", combineEverything);
@@ -172,8 +145,20 @@ public class NewScript extends AppCompatActivity {
             }
         });
     }
-    public int getMyData() {
-        return getHeight;
+    public void clearFocusOf(EditText editText) {
+        try {
+            editText.clearFocus();
+        } catch (Exception ex) {
+            // that's fine.
+        }
     }
+    public String getEdits(String keyID, SharedPreferences impostazioni) {
+        if (impostazioni.contains(keyID)) {
+            return impostazioni.getString(keyID, null);
+        } else {
+            return "";
+        }
+    }
+
 
 }
