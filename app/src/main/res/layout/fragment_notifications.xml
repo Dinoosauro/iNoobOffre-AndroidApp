@@ -7,10 +7,11 @@
     tools:context=".ui.notifications.NotificationsFragment">
 
     <ScrollView
+        android:id="@+id/endScroll"
         android:layout_width="match_parent"
-        android:windowSoftInputMode="adjustResize"
-        android:fitsSystemWindows="true"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:windowSoftInputMode="adjustResize"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout

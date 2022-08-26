@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:animateLayoutChanges="true"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
@@ -21,10 +22,13 @@
         tools:visibility="visible" />
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:id="@+id/mainScroll"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:windowSoftInputMode="adjustResize"
         android:fitsSystemWindows="true"
+        android:windowSoftInputMode="adjustResize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -33,51 +37,43 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.coordinatorlayout.widget.CoordinatorLayout
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fitsSystemWindows="true">
 
-                <com.google.android.material.appbar.AppBarLayout
-                    android:id="@+id/appBarLayout"
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:id="@+id/getThisColor2"
+                    style="?attr/collapsingToolbarLayoutLargeStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fitsSystemWindows="true">
+                    android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
+                    app:contentScrim="?attr/colorPrimary"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-                    <com.google.android.material.appbar.CollapsingToolbarLayout
-                        android:id="@+id/getThisColor2"
-                        style="?attr/collapsingToolbarLayoutLargeStyle"
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/materialToolbar"
                         android:layout_width="match_parent"
-                        android:layout_height="?attr/collapsingToolbarLayoutLargeSize"
-                        app:contentScrim="?attr/colorPrimary"
-                        app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+                        android:layout_height="match_parent"
+                        android:background="@android:color/transparent"
+                        app:layout_collapseMode="pin" />
 
-                        <com.google.android.material.appbar.MaterialToolbar
-                            android:id="@+id/materialToolbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            app:layout_collapseMode="pin" />
+                    <TextView
+                        android:id="@+id/titleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10sp"
+                        android:layout_marginBottom="10sp"
+                        android:fitsSystemWindows="true"
+                        android:fontFamily="@font/worksanstitle"
+                        android:gravity="bottom"
+                        android:text="@string/app_name"
+                        android:textSize="48sp"
+                        android:visibility="visible"></TextView>
 
-                        <TextView
-                            android:id="@+id/titleText"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="10sp"
-                            android:layout_marginBottom="10sp"
-                            android:fitsSystemWindows="true"
-                            android:fontFamily="@font/worksanstitle"
-                            android:gravity="bottom"
-                            android:text="@string/app_name"
-                            android:textSize="40sp"
-                            android:visibility="visible"></TextView>
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-                    </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-                </com.google.android.material.appbar.AppBarLayout>
-
-
-            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            </com.google.android.material.appbar.AppBarLayout>
 
             <LinearLayout
                 android:id="@+id/linklayout"
@@ -127,16 +123,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <CheckBox
-                    android:id="@+id/checkBox"
-                    style="@style/Widget.Material3.CompoundButton.CheckBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10sp"
-                    android:fontFamily="@font/worksans"
-                    android:text="@string/NotDiscounted"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/button"
                     android:layout_width="match_parent"
@@ -179,22 +165,18 @@
                     android:text="@string/Photo"
                     android:textSize="28sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch5"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
                     android:fontFamily="@font/worksans"
                     android:minHeight="48dp"
-                    android:switchMinWidth="60dp"
-                    android:switchPadding="10sp"
                     android:text="@string/OldProductDownload"
                     android:textSize="16sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch2"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -214,9 +196,8 @@
                     android:text="@string/Experimental"
                     android:textSize="20sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch3"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -236,9 +217,8 @@
                     android:text="@string/Link"
                     android:textSize="28sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch1"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10sp"
@@ -250,9 +230,8 @@
                     android:text="@string/BitlyLink"
                     android:textSize="16sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch4"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -281,9 +260,8 @@
                     android:text="@string/Output"
                     android:textSize="28sp" />
 
-                <Switch
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switch6"
-                    style="@style/Widget.Material3.CompoundButton.Switch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10sp"
@@ -367,17 +345,16 @@
         </LinearLayout>
     </ScrollView>
 
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" >
+        app:menu="@menu/bottom_nav_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

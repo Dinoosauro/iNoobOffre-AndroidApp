@@ -7,10 +7,11 @@
     tools:context=".ui.dashboard.DashboardFragment">
 
     <ScrollView
+        android:id="@+id/discountScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:windowSoftInputMode="adjustResize"
         android:fitsSystemWindows="true"
+        android:windowSoftInputMode="adjustResize"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout

@@ -7,10 +7,11 @@
     tools:context=".ui.home.HomeFragment">
 
     <ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-        android:windowSoftInputMode="adjustResize"
+        android:id="@+id/introductionScroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true"
+        android:windowSoftInputMode="adjustResize"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -101,7 +102,7 @@
                 android:text=" ︎ ︎ ︎" />
 
         </LinearLayout>
-</ScrollView>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
